@@ -1,11 +1,4 @@
-{% extends "base.html" %}
-{% load static %}
 
-{% block styles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'users.css' %}"/>
-{% endblock styles %}
-
-{% block content %}
       <div>
         <h2>Nuevo asesor</h2>
         <form method="POST">
@@ -23,6 +16,4 @@
             <input type="submit" value="Crear" href="{% url 'asesores' %}"/>
         </form>
     </div>
-    <a href="{% url 'asesores' %}">Volver</a>
 
-{% endblock %}

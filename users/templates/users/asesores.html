@@ -8,12 +8,7 @@
 {% block content %}
     <div class="asesores">
         <div class="header-asesor">
-            <h1>Asesores</h1>
-            {% if permission %}            
-                <a href="{% url 'createasesor' %}" class="links">
-                    Registrar asesor
-                </a>
-            {% endif %}
+            <h1 class="title">Asesores Coovitel</h1>      
         </div>
         <form method="get" class="form-asesor">
             <select name="ciudad">
@@ -31,21 +26,24 @@
                 <tr>
                     <td>Asesor</td>
                     <td>Sucursal</td>
+                    <td>Comisiones</td>
                     <td></td>
                 </tr>
                 {% for asesor in asesores %}
                 <tr>
                     <td>{{ asesor.name }}</td>
                     <td>{{ asesor.sucursal }}</td>
+                    <td><a class="links" href="{% url 'comisionesAsesor' asesor.name %}">Comisiones</a></td>
                     {% if permission %}
-                        <td><a href="{% url 'deleteasesor' asesor.id %}" onclick="return confirm('Esta seguro de eliminar el asesor {{asesor.name}}?')">Borrar</a></td>
+                        <td><a class="links" href="{% url 'deleteasesor' asesor.id %}" onclick="return confirm('Esta seguro de eliminar el asesor {{asesor.name}}?')">Borrar</a></td>
                     {% endif %}
                 </tr>
                 {% endfor %}
             </table>
         </div>
+        {% if permission %}            
+            {% include "users/createasesor.html" %}
+        {% endif %}
 
-        <div>
-        </div>
     </div>    
 {% endblock  %}
