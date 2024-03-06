@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users.css' %}"/>
+{% endblock styles %}
+
+{% block content %}
+    <h2 class="title">Sucursales en Coovitel</h2>
+    <div>
+        <table>
+            <tr>
+                <td>Sucursal</td>
+                <td></td>
+            </tr>
+            {% for city in citys %}
+                <tr>
+                    <td>{{city.city}}</td>
+                    {% if permission %}
+                        <td><a class="links" href="{% url 'deletesucursal' city.id %}" onclick="return confirm('Esta seguro de eliminar la sucursal {{city.city}}?')">Borrar</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% if permission %}  
+        <div>
+            <a class="links" href="{% url 'createsucursal' %}">Sucursal Nueva</a>
+        </div>
+    {% endif %}
+{% endblock  %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users.css' %}"/>
+{% endblock styles %}
+
+{% block content %}
+    <div class="asesores">
+        <div class="header-asesor">
+            <h1>Asesores</h1>
+            {% if permission %}            
+                <a href="{% url 'createasesor' %}" class="links">
+                    Registrar asesor
+                </a>
+            {% endif %}
+        </div>
+        <form method="get" class="form-asesor">
+            <select name="ciudad">
+                <option value="">-- Selecciona una ciudad --</option>
+                {% for sucursal in ciudades %}
+                    <option value="{{ sucursal.city }}">{{ sucursal.city }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Buscar">
+            <input type="submit" name="todos" value="Buscar Todos">
+        </form>
+
+        <div class="bg-black">
+            <table class="table-fixed">
+                <tr>
+                    <td>Asesor</td>
+                    <td>Sucursal</td>
+                    <td></td>
+                </tr>
+                {% for asesor in asesores %}
+                <tr>
+                    <td>{{ asesor.name }}</td>
+                    <td>{{ asesor.sucursal }}</td>
+                    {% if permission %}
+                        <td><a href="{% url 'deleteasesor' asesor.id %}" onclick="return confirm('Esta seguro de eliminar el asesor {{asesor.name}}?')">Borrar</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div>
+        </div>
+    </div>    
+{% endblock  %}

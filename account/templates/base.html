@@ -7,6 +7,8 @@
             {% block title %}
             {% endblock title %}
         </title>
+        {% block styles %}
+        {% endblock styles %}
         {% load static %}
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,10 +23,10 @@
                 <nav class="menu">
                     <ul>
                         <li>
-                            <a class="links" href="">Asesores</a>
+                            <a class="links" href="{% url "sucursales" %}">Sucursales</a>
                         </li>
                         <li>
-                            <a class="links" href="">Sucursales</a>
+                            <a class="links" href="{% url "asesores" %}">Asesores</a>
                         </li>
                         <li>
                             <a class="links" href="">Comsiones</a>

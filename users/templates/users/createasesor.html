@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users.css' %}"/>
+{% endblock styles %}
+
+{% block content %}
+      <div>
+        <h2>Nuevo asesor</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="name">Nombre</label>
+                <input type="text" name="name" required>
+            </div>
+            <select name="sucursal" id="" required>
+                <option value="">-- Sucursal --</option>
+                {% for sucursal in citys %}
+                    <option value={{ sucursal.city }}>{{ sucursal.city }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Crear" href="{% url 'asesores' %}"/>
+        </form>
+    </div>
+    <a href="{% url 'asesores' %}">Volver</a>
+
+{% endblock %}
