@@ -18,9 +18,9 @@ def asesores(request):
         create.save()
         return redirect("asesores")
 
-    ciudad = Sucursale.objects.all()
     city = request.GET.get("ciudad", None)
     todos = request.GET.get("todos", None)
+    
     if todos is not None:
         asesores = Asesor.objects.all()
     elif city is None or city == "":
@@ -28,10 +28,8 @@ def asesores(request):
     else:
         asesores = Asesor.objects.filter(sucursal__city=city)
     return render(request, "users/asesores.html", {"asesores": asesores,
-                                                   "ciudades": ciudad,
                                                    "permission": permission,
                                                    "citys": citys})
-
 
 @login_required
 def deleteasesor(request, id):
@@ -47,19 +45,14 @@ def sucursales(request):
     if request.user.is_superuser:
         user_permissions = True
     citys = Sucursale.objects.all()
-    return render(request, "users/sucursales.html",
-                            {"citys": citys,
-                             "permission": user_permissions})
-
-@login_required
-def createsucursal(request):
-    """"""
     if request.method == "POST":
         city = request.POST['city']
         create = Sucursale(city=city)
         create.save()
         return redirect("sucursales")
-    return render(request, "users/createsucursal.html")
+    return render(request, "users/sucursales.html",
+                            {"citys": citys,
+                             "permission": user_permissions})
 
 @login_required
 def deleteSucursal(request, id):

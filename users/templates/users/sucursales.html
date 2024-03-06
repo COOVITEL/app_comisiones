@@ -1,12 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block styles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'users.css' %}"/>
-{% endblock styles %}
-
 {% block content %}
-    <h2 class="title">Sucursales Coovitel</h2>
+    <h2 class="title">Sucursales</h2>
     <div>
         <table>
             <tr>
@@ -17,15 +13,13 @@
                 <tr>
                     <td>{{city.city}}</td>
                     {% if permission %}
-                        <td><a class="links" href="{% url 'deletesucursal' city.id %}" onclick="return confirm('Esta seguro de eliminar la sucursal {{city.city}}?')">Borrar</a></td>
+                        <td><a href="{% url 'deletesucursal' city.id %}" onclick="return confirm('Esta seguro de eliminar la sucursal {{city.city}}?')">Borrar</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}
         </table>
     </div>
-    {% if permission %}  
-        <div>
-            <a class="links" href="{% url 'createsucursal' %}">Sucursal Nueva</a>
-        </div>
+    {% if permission %}
+        {% include "users/createsucursal.html" %}
     {% endif %}
 {% endblock  %}

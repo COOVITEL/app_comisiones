@@ -13,7 +13,7 @@
         <form method="get" class="form-asesor">
             <select name="ciudad">
                 <option value="">-- Selecciona una ciudad --</option>
-                {% for sucursal in ciudades %}
+                {% for sucursal in citys %}
                     <option value="{{ sucursal.city }}">{{ sucursal.city }}</option>
                 {% endfor %}
             </select>
@@ -41,7 +41,7 @@
                 {% endfor %}
             </table>
         </div>
-        {% if permission %}            
+        {% if permission %}         
             {% include "users/createasesor.html" %}
         {% endif %}
 
