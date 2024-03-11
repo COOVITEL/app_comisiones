@@ -68,10 +68,17 @@
             </nav>
             <div class="out">
                 {% if request.user.is_authenticated %}
-                    <a class="links" href="{% url "logout" %}">
+                    <a class="link" href="{% url "logout" %}">
                         {% include "icons/exit.html" %}
                         <p>
                             Cerrar Sesión
+                        </p>
+                    </a>
+                {% else %}
+                    <a class="link" href="{% url "login" %}">
+                        {% include "icons/user.html" %}
+                        <p>
+                            Iniciar Sesión
                         </p>
                     </a>
                 {% endif %}
@@ -81,20 +88,28 @@
         <main>
             {% if request.user.is_authenticated %}
                 <div class="options">
-                    <p>Hola {{ request.user.first_name|default:request.user.username }}</p>
-                    <span>
-                        {% include "icons/settings.html" %}
-                        <input type="checkbox">
-                    </span>
-                    <div>
-                        <a href="{% url "password_change" %}">Cambiar contraseña</a>
+                    <div class="top-settings">
+                        <p>Hola <strong>{{ request.user.first_name|default:request.user.username }}!</strong></p>
+                        <input id="menu-toggle" type="checkbox"/>
+                        <label class="menu-button-container" for="menu-toggle">
+                            <div class="menu-button"></div>
+                        </label>
                     </div>
+                    <ul class="menu-settigns" id="menu-settings">
+                        <li><a class="buttons-settings" href="">Editar perfil</a></li>
+                        <li><a class="buttons-settings" href="{% url "password_change" %}">Cambiar contraseña</a></li>
+                        <li><a class="buttons-settings" href="">Solicitar permisos</a></li>
+                    </ul>
+
                 </div>
             {% endif %}
-            {% block content %}
-            
-            {% endblock content %}
+            <div class="content">
+                {% block content %}        
+                {% endblock content %}
+            </div>
         </main>
-        <script src="scripts/script.js"></script>
+        {% load static %}
+        <script src="{% static 'scripts/script.js' %}"></script>
+
     </body>
 </html>

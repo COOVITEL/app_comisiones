@@ -1,6 +1,49 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}"/>
+{% endblock styles %}
+
+{% block title %}Inicio{% endblock %}
+
 {% block content %}
-<h1>Dashboard</h1>
-<p>Welcome to your dashboard.</p>
+    <h1 class="principal-title">Aplicacion de Comisiones</h1>
+    <div class="init-options">
+        <div class="description">
+            <h2>Conoce y controla tus comisiones mes a mes.</h2>
+            <p>Esta app esta diseñada y pensada para que cada asesor pueda conocer sus comisiones mes a mes.</p>
+            <p>Como administrador pordras crear sucursales y asesores para poder conocer sus comisiones.</p>
+            <div class="counters">
+                <span class="counts">Asesores registrados: {{asesors}}</span>
+                <span class="counts">Sucursales registradas: {{sucursales}}</span>
+            </div>
+        </div>
+        <div class="description cards">
+            <div class="card">
+                <picture>
+                    <img class="images" src="{% static 'images/asesors.jpg' %}" alt="">
+                </picture>
+                <p>Datos de cada uno de los asesores</p>
+            </div>
+            <div class="card">
+                <picture>
+                    <img class="images" src="{% static 'images/build.jpg' %}" alt="">
+                </picture>
+                <p>En cada una de las sucursales y canales</p>
+            </div>
+            <div class="card">
+                <picture>
+                    <img class="images" src="{% static 'images/tasas.jpg' %}" alt="">
+                </picture>
+                <p>Ajusta tasas y comisiones</p>
+            </div>
+            <div class="card">
+                <picture>
+                    <img class="images" src="{% static 'images/files.jpg' %}" alt="">
+                </picture>
+                <p>Registros mes a mes</p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

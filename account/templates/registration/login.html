@@ -2,28 +2,37 @@
 
 {% block title %}Iniciar Sesión{% endblock title %}
 
-{% block content %}
-    <h1>Iniciar Sesión App Comisiones</h1>
-    {% if form.errors %}
-        <p>
-            Su usuario o contraseña no son correctos.
-            Intente de nuevo.
-        </p>
-    {% else %}
-        <p>Por favor, ingrese sus credenciales para inicar sesion.</p>
-    {% endif %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
+{% endblock styles %}
 
-    <div>
-        <form action="{% url 'login' %}" method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}" />
-            <p><input type="submit" value="Iniciar Sesion"></p>
-        </form>
-        <p>
-            <a href="{% url "password_reset" %}">
-                Olvido su contraseña?
-            </a>
-        </p>
+{% block content %}
+    <div class="back"></div>
+    <div class="front">
+        <h1>Iniciar Sesión</h1>
+        <h3>App Comisiones</h3>
+        {% if form.errors %}
+            <p>
+                Su usuario o contraseña no son correctos.
+                Intente de nuevo.
+            </p>
+        {% else %}
+            <p>Por favor, ingrese sus credenciales para inicar sesion.</p>
+        {% endif %}
+
+        <div>
+            <form action="{% url 'login' %}" method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}" />
+                <p class="login"><input type="submit" value="Iniciar Sesion"></p>
+            </form>
+            <p class="recover">
+                <a href="{% url "password_reset" %}">
+                    Olvido su contraseña?
+                </a>
+            </p>
+        </div>
     </div>
 {% endblock content %}
