@@ -18,11 +18,15 @@ class Asesor(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        ordering = ['id']
+
 class File(models.Model):
     """"""
     month = models.IntegerField(choices=MONTH_CHOICES)
     year = models.IntegerField(choices=YEAR_CHOICES)
     file = models.FileField(upload_to='uploads/')
+    created = models.DateField(auto_now_add=True) 
     
     @property
     def full_date(self):
@@ -30,3 +34,7 @@ class File(models.Model):
     
     def __str__(self):
         return self.full_date
+    
+    class Meta:
+        unique_together = ('year', 'month')
+        ordering = ['-created']

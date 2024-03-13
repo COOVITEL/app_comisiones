@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .models import Asesor, Sucursale
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import Asesor, Sucursale, File
 from .read_excel import readExcel
+from .forms import FileForm
 
 @login_required
 def asesores(request):
@@ -22,12 +24,21 @@ def asesores(request):
     todos = request.GET.get("todos", None)
     
     if todos is not None:
-        asesores = Asesor.objects.all()
+        asesores = Asesor.objects.all().order_by('id')
     elif city is None or city == "":
-        asesores = Asesor.objects.all()
+        asesores = Asesor.objects.all().order_by('id')
     else:
-        asesores = Asesor.objects.filter(sucursal__city=city)
-    return render(request, "users/asesores.html", {"asesores": asesores,
+        asesores = Asesor.objects.filter(sucursal__city=city).order_by('id')
+
+    paginator = Paginator(asesores, 5)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        asesors = paginator.page(page_number)
+    except (EmptyPage, PageNotAnInteger):
+        asesors = paginator.page(1)
+    
+    return render(request, "users/asesores.html", {"asesors": asesors,
                                                    "permission": permission,
                                                    "citys": citys})
 
@@ -74,3 +85,21 @@ def comisiones(request, name):
             "ahorros": readExcel(name, "Ah Vista", "PROMOTOR", ["COD_INTERNO", "NNASOCIA", "CODNOMINA", "NOMINA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"])
         }
     return render(request, "users/comisiones.html", dates)
+
+def files(request):
+    """"""
+    files = File.objects.all()
+    return render(request, 'users/files.html', {'files': files})
+
+
+
+def addFile(request):
+    if request.method == 'POST':
+        form = FileForm(data=request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            form.save()
+            return redirect('inicio') # Redirige a una URL de éxito
+    else:
+        form = FileForm(data=request.GET)
+    return render(request, 'users/files.html', {'form': form})

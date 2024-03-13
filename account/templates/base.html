@@ -49,7 +49,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="links" href="">
+                        <a class="links" href="{% url "files" %}">
                             {% include "icons/files.html" %}
                             <p>
                                 Archivos
@@ -87,7 +87,7 @@
         
         <main>
             {% if request.user.is_authenticated %}
-                <div class="options">
+                <div class="options opt">
                     <div class="top-settings">
                         <p>Hola <strong>{{ request.user.first_name|default:request.user.username }}!</strong></p>
                         <input id="menu-toggle" type="checkbox"/>
@@ -99,6 +99,8 @@
                         <li><a class="buttons-settings" href="">Editar perfil</a></li>
                         <li><a class="buttons-settings" href="{% url "password_change" %}">Cambiar contraseña</a></li>
                         <li><a class="buttons-settings" href="">Solicitar permisos</a></li>
+                        <li><a class="buttons-settings" href="{% url "logout" %}">Cerrar Sesión</a></li>
+
                     </ul>
 
                 </div>

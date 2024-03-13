@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <h2>Nuevo archivo</h2>
+    {% for file in files %}
+        <p>{{file.full_date}}</p>
+        <p>{{file.file}}</p>
+    {% endfor %}
+{% endblock content %}

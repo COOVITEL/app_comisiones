@@ -29,7 +29,7 @@
                     <td>Comisiones</td>
                     <td></td>
                 </tr>
-                {% for asesor in asesores %}
+                {% for asesor in asesors %}
                 <tr>
                     <td>{{ asesor.name }}</td>
                     <td>{{ asesor.sucursal }}</td>
@@ -41,6 +41,9 @@
                 {% endfor %}
             </table>
         </div>
+
+        {% include "pagination.html" with page=asesors %}
+
         {% if permission %}         
             {% include "users/createasesor.html" %}
         {% endif %}

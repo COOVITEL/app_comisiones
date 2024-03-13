@@ -1,8 +1,8 @@
-from django import forms
+from django.forms import ModelForm
 from .models import File
 
-class FileForm(forms.Form):
+class FileForm(ModelForm):
     """"""
     class Meta:
         model = File
-        fields = ['month', 'year']
+        fields = ['month', 'year', 'file']
