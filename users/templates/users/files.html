@@ -5,7 +5,13 @@
 {% block content %}
     <h2>Nuevo archivo</h2>
     {% for file in files %}
-        <p>{{file.full_date}}</p>
-        <p>{{file.file}}</p>
+        <p>{{file.full_date}} - {{file.file}} - {{file.created}}</p>
     {% endfor %}
+
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <input type="submit" value"Subir"/>
+    </form>
 {% endblock content %}

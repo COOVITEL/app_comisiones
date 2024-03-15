@@ -30,11 +30,10 @@ class File(models.Model):
     
     @property
     def full_date(self):
-        return f"{self.year}-{self.month:02d}"
+        return f"{self.month:02d}-{self.year}"
     
     def __str__(self):
         return self.full_date
     
     class Meta:
-        unique_together = ('year', 'month')
         ordering = ['-created']

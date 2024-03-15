@@ -11,6 +11,7 @@ def asesores(request):
     permission = False
     if request.user.is_superuser:
         permission = True
+    files = File.objects.all()
     citys = Sucursale.objects.all()
     if request.method == "POST":
         name = request.POST['name']
@@ -40,7 +41,8 @@ def asesores(request):
     
     return render(request, "users/asesores.html", {"asesors": asesors,
                                                    "permission": permission,
-                                                   "citys": citys})
+                                                   "citys": citys,
+                                                   "files": files})
 
 @login_required
 def deleteasesor(request, id):
@@ -86,20 +88,17 @@ def comisiones(request, name):
         }
     return render(request, "users/comisiones.html", dates)
 
+@login_required
 def files(request):
     """"""
-    files = File.objects.all()
-    return render(request, 'users/files.html', {'files': files})
-
-
-
-def addFile(request):
+    files = File.objects.all().order_by('-year', '-month')
     if request.method == 'POST':
-        form = FileForm(data=request.POST)
+        form = FileForm(request.POST, request.FILES)
         if form.is_valid():
-            cd = form.cleaned_data
             form.save()
-            return redirect('inicio') # Redirige a una URL de éxito
+            return redirect('files')
     else:
-        form = FileForm(data=request.GET)
-    return render(request, 'users/files.html', {'form': form})
+        form = FileForm()
+    return render(request, 'users/files.html',
+                  {'files': files,
+                   'form': form})

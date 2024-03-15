@@ -21,6 +21,16 @@
             <input type="submit" name="todos" value="Buscar Todos">
         </form>
 
+        <h3>Archivos</h3>
+        <form method="get">
+            <select name="file">
+                <option value="">-- Seleccione un Archivo --</option>
+                {% for file in files %}
+                    <option value="{{ file.full_date }}">{{file.full_date}}</option>
+                {% endfor %}
+            </select>
+        </form>
+
         <div class="bg-black">
             <table class="table-fixed">
                 <tr>
