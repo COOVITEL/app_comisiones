@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <h3>Lista de roles creados</h3>
+    <table>
+        <tr>
+            <th>Nombre Rol</th>
+            <th></th>
+        </tr>
+        {% for rol in roles %}
+            <tr>
+                <td>{{rol.name}}</td>
+                <td><a href="{% url "delete_rol" rol.id %}" onclick="return confirm('Esta seguro de eliminar este rol?')">Eliminar</a></td>
+            </tr>
+        {% endfor %}
+        
+    </table>
+        <h4>Nuevo Rol</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+
+{% endblock content %}

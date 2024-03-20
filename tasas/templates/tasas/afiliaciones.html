@@ -1,0 +1,28 @@
+<table>
+    <tr>
+        <th>Afiliaciones</th>
+        <th>Rol</th>
+        <th>Desde</th>
+        <th>Hasta</th>
+        <th>Valor por afiliacion</th>
+    </tr>
+    {% for afiliacion in afiliaciones %}
+        <tr>
+            <th>{{afiliacion.name}}</th>
+            <th>
+                {% for rol in afiliacion.rol %}
+                {{ rol }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </th>
+            <th>{{afiliacion.since}}</th>
+            <th>{{afiliacion.until}}</th>
+            <th>{{afiliacion.value}}</th>
+        </tr>
+    {% endfor %}
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>

@@ -57,10 +57,26 @@
                         </a>
                     </li>
                     <li>
-                        <a class="links" href="">
+                        <a class="links" href="{% url "list_files" %}">
+                            {% include "icons/tasas.html" %}
+                            <p>
+                                Comisiones
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="links" href="{% url "tasas" %}">
                             {% include "icons/tasas.html" %}
                             <p>
                                 Tasas
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="links" href="{% url "roles" %}">
+                            {% include "icons/tasas.html" %}
+                            <p>
+                                Roles
                             </p>
                         </a>
                     </li>

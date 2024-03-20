@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h3>Lista de asesores</h3>
+
+{% for asesor in asesors %}
+    <p>{{ asesor.name }} <a class="" href="{% url 'comisionesAsesor' asesor.name  %}">Comisiones</a></p>
+{% endfor %}
+
+{% endblock content %}

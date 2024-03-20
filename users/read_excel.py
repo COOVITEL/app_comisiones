@@ -1,9 +1,9 @@
 import pandas as pd
 
 
-def readExcel(name: str, file: str, asesor: str, columns: list) -> dict:
+def readExcel(name: str, file: str, asesor: str, columns: list, archive: str) -> dict:
     """"""
-    pf = pd.read_excel("files/Agosto.xlsx",
+    pf = pd.read_excel(f"media/{archive}",
                        sheet_name=file,
                        usecols=columns)
     dates = pf.loc[pf[asesor] == name].to_dict(orient="records")

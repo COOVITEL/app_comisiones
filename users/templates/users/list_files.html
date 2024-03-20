@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h2>Lista de archivos</h2>
+    <p>Selecciona un archivo</p>
+
+    <table>
+        <tr>
+            <th>Fecha</th>
+            <th>Archivo</th>
+            <th></th>
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{file.full_date}}</td>
+                <td>{{file.file}}</td>
+                <td><a href="{% url "list_asesor" file.full_date %}">Seleccionar</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}
