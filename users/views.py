@@ -11,7 +11,7 @@ def asesores(request):
     permission = False
     if request.user.is_superuser:
         permission = True
-    files = File.objects.all()
+    files = File.objects.all().order_by("-year", "-month")
     citys = Sucursale.objects.all()
     if request.method == "POST":
         name = request.POST['name']
@@ -75,7 +75,7 @@ def deleteSucursal(request, id):
     return redirect("sucursales")
 
 @login_required
-def comisiones(request, name):
+def comisiones(request, name, file):
     """"""
     dates = {}
     dates = {"asesor": Asesor.objects.get(name=name),
@@ -92,13 +92,21 @@ def comisiones(request, name):
 def files(request):
     """"""
     files = File.objects.all().order_by('-year', '-month')
+
+    form = FileForm()
     if request.method == 'POST':
         form = FileForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('files')
-    else:
-        form = FileForm()
+    
+    paginator = Paginator(files, 5)
+    page_number = request.GET.get('page', 1)
+    try:
+        file = paginator.page(page_number)
+    except (EmptyPage, PageNotAnInteger):
+        file = paginator.page(1)
+        
     return render(request, 'users/files.html',
-                  {'files': files,
+                  {'files': file,
                    'form': form})
