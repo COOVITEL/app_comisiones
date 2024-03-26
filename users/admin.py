@@ -3,7 +3,7 @@ from .models import Asesor, Sucursale, File
 
 @admin.register(Asesor)
 class AsesorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'sucursal']
+    list_display = ['name', 'rol', 'sucursal']
     
 @admin.register(Sucursale)
 class SucursalesAdmin(admin.ModelAdmin):
@@ -11,4 +11,4 @@ class SucursalesAdmin(admin.ModelAdmin):
     
 @admin.register(File)
 class FilesAdmin(admin.ModelAdmin):
-    list_display = ['month', 'year', 'full_date']
+    list_display = ['month', 'year', 'full_date', 'created']

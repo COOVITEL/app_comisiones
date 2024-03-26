@@ -8,11 +8,12 @@
         <p>{{file.full_date}} - {{file.file}} - {{file.created}}</p>
     {% endfor %}
 
-{% include "pagination.html" with page=files %}
+    {% include "pagination.html" with page=files %}
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p}}
-        <input type="submit" value"Subir"/>
+        {{ form.as_p }}
+        <input type="submit" value="Subir"/>
     </form>
+
 {% endblock content %}

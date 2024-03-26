@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Asesor, Sucursale, File
 from .read_excel import readExcel
-from .forms import FileForm
+from .forms import FileForm, AsesorForm
 
 @login_required
 def asesores(request):
@@ -11,15 +11,14 @@ def asesores(request):
     permission = False
     if request.user.is_superuser:
         permission = True
-    files = File.objects.all().order_by("-year", "-month")
     citys = Sucursale.objects.all()
-    if request.method == "POST":
-        name = request.POST['name']
-        city = request.POST['sucursal']
-        sucursal = Sucursale.objects.get(city=city)
-        create = Asesor(name=name, sucursal=sucursal)
-        create.save()
-        return redirect("asesores")
+    
+    form = AsesorForm()
+    if request.method == 'POST':
+        form = AsesorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('asesores')
 
     city = request.GET.get("ciudad", None)
     todos = request.GET.get("todos", None)
@@ -40,9 +39,9 @@ def asesores(request):
         asesors = paginator.page(1)
     
     return render(request, "users/asesores.html", {"asesors": asesors,
+                                                   "form": form,
                                                    "permission": permission,
-                                                   "citys": citys,
-                                                   "files": files})
+                                                   "citys": citys})
 
 @login_required
 def optionsAsesors(request, file):
@@ -102,27 +101,25 @@ def comisiones(request, name):
 
 @login_required
 def files(request):
-    """"""
     files = File.objects.all().order_by('-year', '-month')
-
+    paginator = Paginator(files, 5)
+    page_number = request.GET.get('page')
+    
+    try:
+        files = paginator.page(page_number)
+    except PageNotAnInteger:
+        files = paginator.page(1)
+    except EmptyPage:
+        files = paginator.page(paginator.num_pages)
+    
     form = FileForm()
     if request.method == 'POST':
         form = FileForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('files')
-    
-    paginator = Paginator(files, 5)
-    page_number = request.GET.get('page', 1)
-    try:
-        file = paginator.page(page_number)
-    except (EmptyPage, PageNotAnInteger):
-        file = paginator.page(1)
         
-    return render(request, 'users/files.html',
-                  {'files': file,
-                   'form': form})
-
+    return render(request, 'users/files.html', {'files': files, 'form': form})
 @login_required
 def optionsFiles(request):
     """"""

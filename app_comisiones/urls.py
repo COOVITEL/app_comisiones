@@ -10,7 +10,4 @@ urlpatterns = [
     path('roles/', include('roles.urls')),
     path('control_de_comisiones/', include('tasas.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
-]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,4 +1,5 @@
 from django.db import models
+from roles.models import Roles
 
 MONTH_CHOICES = [(i, i) for i in range(1, 13)]
 YEAR_CHOICES = [(i, i) for i in range(2023, 2040)]
@@ -13,10 +14,11 @@ class Sucursale(models.Model):
 class Asesor(models.Model):
     """"""
     name = models.CharField(max_length=100)
+    rol = models.ForeignKey(Roles, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursale, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name} - {self.rol}"
 
     class Meta:
         ordering = ['id']
