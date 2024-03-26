@@ -1,11 +1,7 @@
-{% load set_values %}
-
-<h4>Afiliaciones el {{file}}</h4>
-<p>{{asesor.name}} - {{asesor.rol}}</p>
+<h4>Afiliaciones</h4>
 
 <table>
     <tr>
-        <td>Nombre</td>
         <td>Codigo Interno</td>
         <td>Codigo Nomina</td>
         <td>Nomina</td>
@@ -14,7 +10,6 @@
     </tr>
     {% for afi in afiliaciones.afiliaciones %}
         <tr>
-            <td>{{afi.NOMBRES}}</td>
             <td>{{afi.COD_INTERNO}}</td>
             <td>{{afi.CODNOMINA}}</td>
             <td>{{afi.NOMINA}}</td>
@@ -24,4 +19,4 @@
     {% endfor %}
 </table>
 <p>Numero de Afiliaciones: {{afiliaciones.numberAfiliaciones}} - Pago por afiliacion {{afiliaciones.tasas.value}}</p>
-<p>Total pago: $ {{ afiliaciones.pagoAfiliaciones }}</p>
+<p>Total pago: $ {{afiliaciones.pagoAfiliaciones}}</p>
