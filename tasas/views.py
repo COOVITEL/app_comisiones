@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Afiliaciones
 from .forms import AfiliacionesForm
 
+@login_required
 def controlTasas(request):
     """"""
     list_afiliaciones = Afiliaciones.objects.all()
@@ -16,6 +18,7 @@ def controlTasas(request):
                   {'afiliaciones': list_afiliaciones,
                    'form': form})
 
+@login_required
 def afiliaciones(request):
     """"""
     return render(request, 'tasas/afiliaciones.html')

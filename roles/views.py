@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import Roles
 from .forms import RolesForm
 
+@login_required
 def roles(request):
     roles = Roles.objects.all()
     form = RolesForm()
@@ -14,6 +16,7 @@ def roles(request):
                     'roles': roles,
                     'form': form})
 
+@login_required
 def deleteRole(request, id):
     rol = Roles.objects.get(id=id)
     rol.delete()

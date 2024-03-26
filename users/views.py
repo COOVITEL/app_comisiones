@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Asesor, Sucursale, File
-from .read_excel import readExcel
 from .forms import FileForm, AsesorForm
 
 @login_required
@@ -42,15 +41,6 @@ def asesores(request):
                                                    "form": form,
                                                    "permission": permission,
                                                    "citys": citys})
-
-@login_required
-def optionsAsesors(request, file):
-    """"""
-    asesors = Asesor.objects.all()
-    request.session['file'] = file
-    return render(request, 'users/list_asesors.html',
-                  {'asesors': asesors})
-    
     
 @login_required
 def deleteasesor(request, id):
@@ -83,23 +73,6 @@ def deleteSucursal(request, id):
     return redirect("sucursales")
 
 @login_required
-def comisiones(request, name):
-    """"""
-    file = request.session.get('file')
-    month, year = file.split('-')
-    current_file = File.objects.get(month=month, year=year)
-    dates = {}
-    dates = {"asesor": Asesor.objects.get(name=name),
-            "afiliaciones": readExcel(name, "Afiliaciones", "PROMOTOR", ["COD_INTERNO", "CODNOMINA", "NOMINA", "PROMOTOR", "F_CORTE", "SUCURSAL"], current_file.file),
-            #"colocaiones": readExcel(name, "Desembolsos", "NNPROMOT", ["A_OBLIGA", "CODNOMINA", "NOMINA", "MONTO", "CARTERA", "NETO_ANTES", "P_TASEFEC", "NNPROMOT", "F_CORTE", "SUC_PRODUCTO"]),
-            #"cdats": readExcel(name, "CDAT", "PROMOTOR", ["CC", "A_TITULO", "Q_PLADIA", "V_TITULO", "M_ANTERIOR", "T_EFECTIVA", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"]),
-            #"cooviahorros": readExcel(name, "Cooviahorro", "PROMOTOR", ["NNASOCIA", "CODNOMINA", "V_CUOTA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"]),
-            #"rotativo": readExcel(name, "Rotativos", ["A_NUMNIT", "N_NOMBRE", "CODNOMINA", "NOMINA", "N_MODALI", "A_OBLIGA", "SUMA_UTL", "F_CORTE", "SUC_PRODUCTO"]),
-            #"ahorros": readExcel(name, "Ah Vista", "PROMOTOR", ["COD_INTERNO", "NNASOCIA", "CODNOMINA", "NOMINA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"])
-        }
-    return render(request, "users/comisiones.html", dates)
-
-@login_required
 def files(request):
     files = File.objects.all().order_by('-year', '-month')
     paginator = Paginator(files, 5)
@@ -120,6 +93,7 @@ def files(request):
             return redirect('files')
         
     return render(request, 'users/files.html', {'files': files, 'form': form})
+
 @login_required
 def optionsFiles(request):
     """"""
@@ -134,3 +108,11 @@ def optionsFiles(request):
     return render(request, 'users/list_files.html',
                   {'files': list_files})
     
+@login_required
+def optionsAsesors(request, file):
+    """"""
+    asesors = Asesor.objects.all()
+    request.session['file'] = file
+    
+    return render(request, 'users/list_asesors.html',
+                  {'asesors': asesors, 'file': file})   

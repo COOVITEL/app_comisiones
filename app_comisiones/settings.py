@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'roles.apps.RolesConfig',
     'tasas.apps.TasasConfig',
+    'comisiones.apps.ComisionesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
