@@ -3,26 +3,24 @@
 <table>
     <tr>
         <td>A_OBLIGA</td>
-        <td>Codnomina</td>
         <td>Nomina</td>
+        <td>Monto</td>
         <td>Cartera</td>
         <td>Neto Antes</td>
         <td>P Tasa Efectiva</td>
-        <td>NN Promot</td>
         <td>F corte</td>
         <td>Suc produto</td>
     </tr>
     {% for col in colocaciones.colocaciones %}
         <tr>
-        <td>{{col.A_OBLIGA}}</td>
-        <td>{{col.CODNOMINA}}</td>
-        <td>{{col.NOMINA}}</td>
-        <td>{{col.MONTO}}</td>
-        <td>{{col.CARTERA}}</td>
-        <td>{{col.NETO_ANTES}}</td>
-        <td>{{col.P_TASAEFECT}}</td>
-        <td>{{col.NNPROMOT}}</td>
-        <td>{{col.F_CORTE}}</td>
+            <td>{{col.A_OBLIGA}}</td>
+            <td>{{col.NOMINA}}</td>
+            <td>{{col.MONTO}}</td>
+            <td>{{col.CARTERA}}</td>
+            <td>{{col.NETO_ANTES}}</td>
+            <td>{{col.P_TASEFEC}}</td>
+            <td>{{col.F_CORTE}}</td>
+            <td>{{col.SUC_PRODUCTO}}</td>
         </tr>
     {% endfor %}
 </table>

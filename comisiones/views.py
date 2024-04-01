@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .functions import afiliaciones, colocaciones
-from users.models import File
+from users.models import File, Asesor
 
 def comisiones(request, name, file):
     """"""

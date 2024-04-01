@@ -29,7 +29,7 @@ def colocaciones(name, current_file):
     colocaciones = readExcel(name,
                              "Desembolsos",
                              "NNPROMOT",
-                             ["A_OBLIGA", "CODNOMINA", "NOMINA", "MONTO", "CARTERA", "NETO_ANTES", "P_TASEFEC", "NNPROMOT", "F_CORTE", "SUC_PRODUCTO"],
+                             ["A_OBLIGA", "NOMINA", "MONTO", "CARTERA", "NETO_ANTES", "P_TASEFEC", "NNPROMOT", "F_CORTE", "SUC_PRODUCTO"],
                              current_file.file
                              )
     colocations = {

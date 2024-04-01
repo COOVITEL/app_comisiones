@@ -10,7 +10,7 @@
 }
 
 .principal-title {
-    margin-left: 30px;
+    margin: 20px;
 }
 
 .init-options {
@@ -25,6 +25,7 @@
 
 .description h2 {
     width: 80%;
+    margin: 30px;
     margin-left: 20px;
     font-size: clamp(2rem, 3vw, 3rem);
 }
@@ -32,6 +33,7 @@
 .description p {
     width: 90%;
     margin-left: 15px;
+    margin: 40px;
     font-size: clamp(1rem, 3vw, 1.2rem);
     color: var(--colorTwo);
 }
@@ -39,6 +41,7 @@
 .counters {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .counts {
