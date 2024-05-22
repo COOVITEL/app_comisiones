@@ -18,5 +18,6 @@
         </tr>
     {% endfor %}
 </table>
-<p>Numero de Afiliaciones: {{afiliaciones.numberAfiliaciones}} - Pago por afiliacion {{afiliaciones.tasas.value}}</p>
-<p>Total pago: $ {{afiliaciones.pagoAfiliaciones}}</p>
+<p>Numero de Afiliaciones: {{afiliaciones.numberAfiliaciones}} - Pago por afiliacion $ <span id="values">{{afiliaciones.tasas.value}}</span></p>
+<p>Total pago: $ <span id="values">{{afiliaciones.pagoAfiliaciones}}</span></p>
+

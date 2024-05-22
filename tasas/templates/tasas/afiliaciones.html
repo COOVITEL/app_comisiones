@@ -9,11 +9,7 @@
     {% for afiliacion in afiliaciones %}
         <tr>
             <th>{{afiliacion.name}}</th>
-            <th>
-                {% for rol in afiliacion.rol %}
-                {{ rol }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </th>
+            <th>{{afiliacion.rol}}</th>
             <th>{{afiliacion.since}}</th>
             <th>{{afiliacion.until}}</th>
             <th>{{afiliacion.value}}</th>
@@ -23,6 +19,6 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ formAfi.as_p }}
     <button type="submit">Guardar</button>
 </form>
