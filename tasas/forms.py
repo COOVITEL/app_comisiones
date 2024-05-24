@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones
+from .models import Afiliaciones, Colocaciones, Cooviahorro
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -38,4 +38,17 @@ class ColocacionesForm(forms.ModelForm):
             'value_min': 'Valor Minimo',
             'value_max': 'Valor Maximo',
             'value': 'Valor Comision'
+        }
+
+class CooviahorroForm(forms.ModelForm):
+    """"""
+    class Meta():
+        model = Cooviahorro
+        fields = ['name', 'description', 'rol', 'monto', 'value']
+        labels = {
+            'name': 'Nombre',
+            'description': 'Descripcion',
+            'rol': 'Rol',
+            'monto': 'Monto para comision',
+            'value': 'Monto de comision'
         }

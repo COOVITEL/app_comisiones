@@ -1,7 +1,8 @@
 from users.models import File
 from .read_excel import readExcel
-from tasas.models import Afiliaciones, Colocaciones
+from tasas.models import Afiliaciones, Colocaciones, Cooviahorro
 from users.models import Asesor
+import math
 
 def afiliaciones(name, current_file):
     """
@@ -9,9 +10,11 @@ def afiliaciones(name, current_file):
     afiliaciones = readExcel(name,
                              "Afiliaciones",
                              "PROMOTOR",
-                             ["NOMBRES", "COD_INTERNO", "CODNOMINA", "NOMINA", "PROMOTOR", "F_CORTE", "SUCURSAL"],
+                             ["NOMBRES", "COD_INTERNO", "CODNOMINA", "NOMINA", "ACUM_APO", "ACUM_AHO", "PROMOTOR", "F_CORTE", "SUCURSAL"],
                              current_file.file)
-    numberAfiliaciones = len(afiliaciones)
+    
+    setAfiliaciones = [afi for afi in afiliaciones if afi["ACUM_AHO"] > 0]
+    numberAfiliaciones = len(setAfiliaciones)
     tasasAfiliaciones = Afiliaciones.objects.all()
     # Inicializa tasa con None o cualquier otro valor predeterminado adecuado
     tasa = None
@@ -22,7 +25,7 @@ def afiliaciones(name, current_file):
             break
     
     afiliaciones = {
-        "afiliaciones": afiliaciones,
+        "afiliaciones": setAfiliaciones,
         "numberAfiliaciones": numberAfiliaciones,
         "tasas": tasa,
         "pagoAfiliaciones": int(numberAfiliaciones) * int(tasa.value) if tasa else 0,  # Asegura que pagoAfiliaciones maneje correctamente el caso cuando tasa es None
@@ -34,7 +37,6 @@ def colocaciones(name, current_file):
     """"""
     col = Colocaciones.objects.all()
     asesor = Asesor.objects.get(name=name)
-    print(asesor.name)
     colocaciones = readExcel(name,
                              "Desembolsos",
                              "NNPROMOT",
@@ -55,10 +57,23 @@ def colocaciones(name, current_file):
     
     comision = 0
     for col in setColocaciones:
-        tasaMonth = float(col['P_TASEFEC'] / 12)
+        number = int(col["NETO_ANTES"])
+        numero = number / 1000000
+        
+        tasa = float(col["P_TASEFEC"]) / int(100)
+        tasaNominal = ((12 * ((1 + tasa)**(1/12) - 1)) / 12) * 100
+        
+        print(f"Monto {col['NETO_ANTES']}")
+        print(f"Tasa Anual {tasa}")
+        print(f"Tasa Nominal {tasaNominal}")
+        print(f"Numero {numero}")
         for filtC in filterCol:
-            if tasaMonth >= float(filtC.tasa_min) and tasaMonth <= float(filtC.tasa_max):        
-                comision += int(filtC.value)
+            if tasaNominal >= float(filtC.tasa_min) and tasaNominal <= float(filtC.tasa_max):        
+                print(f"Cantidad de pago {filtC.value}")
+                currentComision = math.ceil((int(filtC.value) * numero))
+                print(f"Comision {currentComision}")
+                print()
+                comision += int(str(currentComision).split(".")[0])
     colocations = {
         "colocaciones": setColocaciones,
         "neto": values,
@@ -67,3 +82,27 @@ def colocaciones(name, current_file):
     }
     
     return colocations
+
+def cooviahorro(name, current_file):
+    coovi = Cooviahorro.objects.all()
+    currentMonto = int(coovi[0].monto.replace(".", ""))
+    currentValue = int(coovi[0].value.replace(".", ""))
+    cooviahorros = readExcel(name,
+                             "Cooviahorro",
+                             "PROMOTOR_ANT",
+                             ["AANUMNIT", "K_NUMDOC", "N_TIPODR", "SALDO", "PROMOTOR_ANT"],
+                             current_file.file)
+    setCooviahorros = [
+        {**d,
+            'SALDO': str(d['SALDO']).split(".")[0],
+        }
+        for d in cooviahorros]
+    monto = sum(int(value['SALDO']) for value in setCooviahorros)
+    numbersComisions = int(monto / int(currentMonto))
+    comision = numbersComisions * int(currentValue)
+    listCooviahorros = {
+        'cooviahorros': setCooviahorros,
+        'monto': monto,
+        'comision': comision
+    }
+    return listCooviahorros

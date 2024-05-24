@@ -1,0 +1,22 @@
+<h4>Cooviahorros</h4>
+
+<table>
+    <tr>
+        <td>NIT</td>
+        <td>Numero</td>
+        <td>Tipo</td>
+        <td>Valor</td>
+    </tr>
+    {% for col in cooviahorros.cooviahorros %}
+        <tr>
+            <td>{{col.AANUMNIT}}</td>
+            <td>{{col.K_NUMDOC}}</td>
+            <td>{{col.N_TIPODR}}</td>
+            <td>$ <span id="values">{{col.SALDO}}</span></td>
+        </tr>
+    {% endfor %}
+</table>
+<p>Valor total en Cooviahorros: $ <span id="values">{{cooviahorros.monto}}</span></p>
+<p>Valor total de Comision: $ <span id="values">{{cooviahorros.comision}}</span></p>
+
+    

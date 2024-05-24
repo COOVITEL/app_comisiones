@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from roles.models import Roles
 
 class Afiliaciones(models.Model):
     """"""
@@ -26,4 +27,15 @@ class Colocaciones(models.Model):
     
     def __str__(self) -> str:
         return f"Colocaciones {self.name} de {self.rol}"
+
+class Cooviahorro(models.Model):
+    """"""
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
+    rol = models.ForeignKey(Roles, on_delete=models.CASCADE)
+    monto = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
     
+    def __str__(self) -> str:
+        """"""
+        return f"Coviahoorro comision {self.value} por cada $ {self.monto} para {self.rol}"

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .functions import afiliaciones, colocaciones
+from .functions import afiliaciones, colocaciones, cooviahorro
 from users.models import File, Asesor
 
 def comisiones(request, name, file):
@@ -11,6 +11,7 @@ def comisiones(request, name, file):
             "asesor": name,
             "afiliaciones": afiliaciones(name, current_file),
             "colocaciones": colocaciones(name, current_file),
+            "cooviahorros": cooviahorro(name, current_file)
             #"colocaiones": readExcel(name, "Desembolsos", "NNPROMOT", ["A_OBLIGA", "CODNOMINA", "NOMINA", "MONTO", "CARTERA", "NETO_ANTES", "P_TASEFEC", "NNPROMOT", "F_CORTE", "SUC_PRODUCTO"]),
             #"cdats": readExcel(name, "CDAT", "PROMOTOR", ["CC", "A_TITULO", "Q_PLADIA", "V_TITULO", "M_ANTERIOR", "T_EFECTIVA", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"]),
             #"cooviahorros": readExcel(name, "Cooviahorro", "PROMOTOR", ["NNASOCIA", "CODNOMINA", "V_CUOTA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"]),

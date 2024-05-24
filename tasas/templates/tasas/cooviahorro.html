@@ -1,0 +1,24 @@
+<table>
+    <tr>
+        <th>Cooviahorro</th>
+        <th>Descripcion</th>
+        <th>Rol</th>
+        <th>Monto para comision</th>
+        <th>Comision</th>
+    </tr>
+    {% for cooviahorro in coovi %}
+        <tr>
+            <th>{{cooviahorro.name}}</th>
+            <th>{{cooviahorro.description}}</th>
+            <th>{{cooviahorro.rol}}</th>
+            <th>{{cooviahorro.monto}}</th>
+            <th>{{cooviahorro.value}}</th>
+        </tr>
+    {% endfor %}
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    {{ formCoovi.as_p }}
+    <button type="submit">Guardar</button>
+</form>
