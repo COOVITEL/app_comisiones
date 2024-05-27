@@ -1,0 +1,40 @@
+<h4>Cdats</h4>
+
+<table>
+    <tr>
+        <td>Codigo Interno</td>
+        <td>Nombre Nomina</td>
+        <td>Valor Titulo</td>
+        <td>Monto Anterios</td>
+        <td>Monto Nuevo</td>
+        <td>Fecha Titulo</td>
+        <td>Tasa</td>
+        <td>Retencion</td>
+    </tr>
+    {% for cdat in cdats.cdats %}
+        <tr>
+            <td>{{cdat.K_IDTERC}}</td>
+            <td>{{cdat.NOMBRE_TERCERO}}</td>
+            <td id="values">{{cdat.V_TITULO}}</td>
+            <td id="values">{{cdat.M_ANTERIOR}}</td>
+            <td id="values">{{cdat.V_NUEVO}}</td>
+            <td>{{cdat.F_TITULO}}</td>
+            <td>{{cdat.T_NOMINAL}}</td>
+            <td>{{cdat.RETENCION}}</td>
+        </tr>
+    {% endfor %}
+</table>
+<p>Total Nuevo de CDATS: $ <span id="values">{{cdats.totalNuevo}}</span></p>
+<p>Total Renovado de CDATS: $ <span id="values">{{cdats.totalRenovado}}</span></p>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var montos = document.querySelectorAll('#values');
+        montos.forEach(function(monto) {
+            if (monto.textContent!== '') {
+                var num = parseFloat(monto.textContent.replace(/,/g, ''));
+                monto.textContent = num.toLocaleString();
+            }
+        });
+    });
+</script>

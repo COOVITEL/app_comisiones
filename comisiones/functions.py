@@ -76,11 +76,12 @@ def colocaciones(name, current_file):
     
     return colocations
 
+
 def cooviahorro(name, current_file):
     coovi = Cooviahorro.objects.all()
-    asesor = Asesor.objects.get(name=name)
-    currentMonto = int(coovi[0].monto.replace(".", ""))
-    currentValue = int(coovi[0].value.replace(".", ""))
+    comisionValue = coovi[0].value.replace(".", "")
+    comisionMonto = coovi[0].monto.replace(".", "")
+    currentCourt = Court.objects.all()[0].value
     cooviahorros = readExcel(name,
                              "Cooviahorro",
                              "PROMOTOR",
@@ -93,14 +94,68 @@ def cooviahorro(name, current_file):
         for d in cooviahorros]
     
     monto = sum(int(value['SALDO']) for value in setCooviahorros)
-    strCoovi = f""
-    print(current_file)
-    print(asesor)
-    numbersComisions = int(monto / int(currentMonto))
-    comision = numbersComisions * int(currentValue)
+    date = str(current_file).split("-")
+    month = date[0]
+    year = date[1]
+    
+    if not CooviahorroMonth.objects.filter(nameAsesor=name, year=year, month=month).exists():
+        registerCoovi = CooviahorroMonth(nameAsesor=name, totalValue=monto, year=year, month=month, court=currentCourt)
+        registerCoovi.save()
+    
+    asesorHistory = CooviahorroMonth.objects.filter(nameAsesor=name)
+    
+    controlState = False
+    controlPosition = 0
+    value = 0
+    for historyDate in asesorHistory:
+        if int(historyDate.totalValue) == int(monto):
+            controlState = True
+            corte = historyDate.court
+            continue
+        if controlState:
+            controlPosition += 1
+            if int(historyDate.totalValue) > value:
+                value = int(historyDate.totalValue)
+            if controlPosition > int(corte):
+                break
+    
+    totalMonto = int(monto) - int(value)
+
+    comision = math.ceil((totalMonto / int(comisionMonto)) * int(comisionValue))
     listCooviahorros = {
         'cooviahorros': setCooviahorros,
-        'monto': monto,
+        'monto': totalMonto,
         'comision': comision
     }
     return listCooviahorros
+
+def cdats(name, current_file):
+    """"""
+    date = str(current_file).split("-")
+    currentDate = f"{date[1]}-{date[0]}"
+    cdats = readExcel(name,
+                             "Cdat",
+                             "PROMOTOR",
+                             ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "M_ANTERIOR", "T_NOMINAL", "RETENCION", "PROMOTOR"],
+                             current_file.file)
+
+    setListCdats = [cdat for cdat in cdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
+
+    setCdats = [
+        {**d,
+            'V_TITULO': str(d['V_TITULO']).split(".")[0],
+            'M_ANTERIOR': str(d['M_ANTERIOR']).split(".")[0],
+            'V_NUEVO': int(str(d['V_TITULO']).split(".")[0]) - int(str(d['M_ANTERIOR']).split(".")[0]),
+        }
+        for d in setListCdats]
+    
+    totalNuevo = sum(int(value['V_NUEVO']) for value in setCdats)
+    totalRenovado = sum(int(value['M_ANTERIOR']) for value in setCdats)
+
+    listCdats = {
+        'cdats': setCdats,
+        'totalNuevo': totalNuevo,
+        'totalRenovado': totalRenovado
+    }
+
+    return listCdats

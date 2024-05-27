@@ -47,10 +47,13 @@ class CooviahorroMonth(models.Model):
     totalValue = models.CharField(max_length=100)
     year = models.IntegerField()
     month = models.IntegerField()
-    court = models.IntegerField()
+    court = models.IntegerField(default=5)
 
     def __str__(self):
-        return f"{self.nameAsesor} del {self.month}/{self.year}"
+        return f"{self.nameAsesor} con {self.totalValue} del {self.month}/{self.year}"
+    
+    class Meta:
+        ordering = ['-year', '-month']
 
 class Court(models.Model):
     """"""
