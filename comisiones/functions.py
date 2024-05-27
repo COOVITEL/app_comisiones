@@ -1,7 +1,7 @@
 from users.models import File
 from .read_excel import readExcel
 from tasas.models import Afiliaciones, Colocaciones, Cooviahorro
-from users.models import Asesor
+from users.models import Asesor, CooviahorroMonth, Court
 import math
 
 def afiliaciones(name, current_file):
@@ -63,16 +63,9 @@ def colocaciones(name, current_file):
         tasa = float(col["P_TASEFEC"]) / int(100)
         tasaNominal = ((12 * ((1 + tasa)**(1/12) - 1)) / 12) * 100
         
-        print(f"Monto {col['NETO_ANTES']}")
-        print(f"Tasa Anual {tasa}")
-        print(f"Tasa Nominal {tasaNominal}")
-        print(f"Numero {numero}")
         for filtC in filterCol:
             if tasaNominal >= float(filtC.tasa_min) and tasaNominal <= float(filtC.tasa_max):        
-                print(f"Cantidad de pago {filtC.value}")
                 currentComision = math.ceil((int(filtC.value) * numero))
-                print(f"Comision {currentComision}")
-                print()
                 comision += int(str(currentComision).split(".")[0])
     colocations = {
         "colocaciones": setColocaciones,
@@ -85,19 +78,24 @@ def colocaciones(name, current_file):
 
 def cooviahorro(name, current_file):
     coovi = Cooviahorro.objects.all()
+    asesor = Asesor.objects.get(name=name)
     currentMonto = int(coovi[0].monto.replace(".", ""))
     currentValue = int(coovi[0].value.replace(".", ""))
     cooviahorros = readExcel(name,
                              "Cooviahorro",
-                             "PROMOTOR_ANT",
-                             ["AANUMNIT", "K_NUMDOC", "N_TIPODR", "SALDO", "PROMOTOR_ANT"],
+                             "PROMOTOR",
+                             ["AANUMNIT", "K_NUMDOC", "N_TIPODR", "SALDO", "PROMOTOR"],
                              current_file.file)
     setCooviahorros = [
         {**d,
             'SALDO': str(d['SALDO']).split(".")[0],
         }
         for d in cooviahorros]
+    
     monto = sum(int(value['SALDO']) for value in setCooviahorros)
+    strCoovi = f""
+    print(current_file)
+    print(asesor)
     numbersComisions = int(monto / int(currentMonto))
     comision = numbersComisions * int(currentValue)
     listCooviahorros = {

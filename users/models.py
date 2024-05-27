@@ -16,6 +16,7 @@ class Asesor(models.Model):
     name = models.CharField(max_length=100)
     rol = models.ForeignKey(Roles, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursale, on_delete=models.CASCADE)
+    cooviahorro = models.CharField(max_length=500, default="0")
 
     def __str__(self) -> str:
         return f"{self.name} - {self.rol}"
@@ -39,3 +40,22 @@ class File(models.Model):
     
     class Meta:
         ordering = ['-created']
+
+class CooviahorroMonth(models.Model):
+    """"""
+    nameAsesor = models.CharField(max_length=100)
+    totalValue = models.CharField(max_length=100)
+    year = models.IntegerField()
+    month = models.IntegerField()
+    court = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.nameAsesor} del {self.month}/{self.year}"
+
+class Court(models.Model):
+    """"""
+    value = models.IntegerField()
+    
+    def __str__(self):
+        """"""
+        return f"Numero de meses de corte: {self.value}"
