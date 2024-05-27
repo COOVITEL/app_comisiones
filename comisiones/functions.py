@@ -136,7 +136,7 @@ def cdats(name, current_file):
     cdats = readExcel(name,
                              "Cdat",
                              "PROMOTOR",
-                             ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "M_ANTERIOR", "T_NOMINAL", "RETENCION", "PROMOTOR"],
+                             ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_NOMINAL", "RETENCION", "PROMOTOR"],
                              current_file.file)
 
     setListCdats = [cdat for cdat in cdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
@@ -145,7 +145,9 @@ def cdats(name, current_file):
         {**d,
             'V_TITULO': str(d['V_TITULO']).split(".")[0],
             'M_ANTERIOR': str(d['M_ANTERIOR']).split(".")[0],
+            'Q_PLADIA': str(d['Q_PLADIA']).split(".")[0],
             'V_NUEVO': int(str(d['V_TITULO']).split(".")[0]) - int(str(d['M_ANTERIOR']).split(".")[0]),
+            'FACTOR_PLAZO': round(int(d['Q_PLADIA']) / 360, 2)
         }
         for d in setListCdats]
     

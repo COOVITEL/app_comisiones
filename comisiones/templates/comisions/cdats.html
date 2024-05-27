@@ -3,23 +3,27 @@
 <table>
     <tr>
         <td>Codigo Interno</td>
-        <td>Nombre Nomina</td>
+        {% comment %} <td>Nombre Nomina</td> {% endcomment %}
+        <td>Plazo</td>
         <td>Valor Titulo</td>
         <td>Monto Anterios</td>
         <td>Monto Nuevo</td>
-        <td>Fecha Titulo</td>
+        {% comment %} <td>Fecha Titulo</td> {% endcomment %}
         <td>Tasa</td>
+        <td>Factor Tasa</td>
         <td>Retencion</td>
     </tr>
     {% for cdat in cdats.cdats %}
         <tr>
             <td>{{cdat.K_IDTERC}}</td>
-            <td>{{cdat.NOMBRE_TERCERO}}</td>
+            {% comment %} <td>{{cdat.NOMBRE_TERCERO}}</td> {% endcomment %}
+            <td>{{cdat.Q_PLADIA}}</td>
             <td id="values">{{cdat.V_TITULO}}</td>
             <td id="values">{{cdat.M_ANTERIOR}}</td>
             <td id="values">{{cdat.V_NUEVO}}</td>
-            <td>{{cdat.F_TITULO}}</td>
+            {% comment %} <td>{{cdat.F_TITULO}}</td> {% endcomment %}
             <td>{{cdat.T_NOMINAL}}</td>
+            <td>{{cdat.FACTOR_PLAZO}}</td>
             <td>{{cdat.RETENCION}}</td>
         </tr>
     {% endfor %}

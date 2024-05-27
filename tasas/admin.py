@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Afiliaciones, Colocaciones, Cooviahorro
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat
 
 @admin.register(Afiliaciones)
 class AfiliacionesAdmin(admin.ModelAdmin):
@@ -12,3 +12,7 @@ class ColocacionesAdmin(admin.ModelAdmin):
 @admin.register(Cooviahorro)
 class CooviahorroAdmin(admin.ModelAdmin):
     list_display = ['name', 'description', 'rol', 'monto', 'value']
+
+@admin.register(Cdat)
+class CdatAdmin(admin.ModelAdmin):
+    list_display = ['name', 'rol', 'type', 'valueMin', 'valueMax', 'value']

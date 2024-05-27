@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones, Cooviahorro
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -51,4 +51,19 @@ class CooviahorroForm(forms.ModelForm):
             'rol': 'Rol',
             'monto': 'Monto para comision',
             'value': 'Monto de comision'
+        }
+
+class CdatForm(forms.ModelForm):
+    """"""
+    class Meta():
+        model = Cdat
+        fields = ['name', 'description', 'rol', 'type', 'valueMin', 'valueMax', 'value']
+        labels = {
+            'name': 'Nombre',
+            'description': 'Descriptión',
+            'rol': 'Rol',
+            'type': 'Tipo de Cdat',
+            'valueMin': 'Valor Minimo',
+            'valueMax': 'Valor Maximo',
+            'value': 'Valor Comisión'
         }
