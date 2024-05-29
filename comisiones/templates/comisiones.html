@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}"/>
+{% endblock styles %}
+
 {% block content %}
-    <h2>Comisiones {{asesor}}</h2>
+    <div class="tables">
+        <h2>Comisiones {{asesor}}</h2>
     
-    {% comment %} {% include "comisions/afiliaciones.html" %} {% endcomment %}
-
-    {% comment %} {% include "comisions/colocaciones.html" %} {% endcomment %}
-
-    {% comment %} {% include "comisions/cooviahorros.html" %} {% endcomment %}
-
-    {% include "comisions/cdats.html" %}
+        {% include "comisions/afiliaciones.html" %}
+        
+        {% include "comisions/colocaciones.html" %}
+        
+        {% include "comisions/cooviahorros.html" %}
+        
+        {% include "comisions/cdats.html" %}
+    </div>
 {% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var montos = document.querySelectorAll('#values');
+        montos.forEach(function(monto) {
+            if (monto.textContent!== '') {
+                var num = parseFloat(monto.textContent.replace(/,/g, ''));
+                monto.textContent = num.toLocaleString();
+            }
+        });
+    });
+</script>

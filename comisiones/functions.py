@@ -1,6 +1,6 @@
 from users.models import File
 from .read_excel import readExcel
-from tasas.models import Afiliaciones, Colocaciones, Cooviahorro
+from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas
 from users.models import Asesor, CooviahorroMonth, Court
 import math
 
@@ -13,10 +13,16 @@ def afiliaciones(name, current_file):
                              ["NOMBRES", "COD_INTERNO", "CODNOMINA", "NOMINA", "ACUM_APO", "ACUM_AHO", "PROMOTOR", "F_CORTE", "SUCURSAL"],
                              current_file.file)
     
-    setAfiliaciones = [afi for afi in afiliaciones if afi["ACUM_AHO"] > 0]
-    numberAfiliaciones = len(setAfiliaciones)
+    setAfiliaciones = [afi for afi in afiliaciones if afi["ACUM_APO"] > 0]
+    setListAfiliaciones = [
+        {**d,
+            'ACUM_AHO': str(d['ACUM_AHO']).split(".")[0],
+            'ACUM_APO': str(d['ACUM_APO']).split(".")[0]
+         }
+        for d in setAfiliaciones
+    ]
+    numberAfiliaciones = len(setListAfiliaciones)
     tasasAfiliaciones = Afiliaciones.objects.all()
-    # Inicializa tasa con None o cualquier otro valor predeterminado adecuado
     tasa = None
 
     for tasas in tasasAfiliaciones:
@@ -25,10 +31,10 @@ def afiliaciones(name, current_file):
             break
     
     afiliaciones = {
-        "afiliaciones": setAfiliaciones,
+        "afiliaciones": setListAfiliaciones,
         "numberAfiliaciones": numberAfiliaciones,
-        "tasas": tasa,
-        "pagoAfiliaciones": int(numberAfiliaciones) * int(tasa.value) if tasa else 0,  # Asegura que pagoAfiliaciones maneje correctamente el caso cuando tasa es None
+        "tasas": int(tasa.value),
+        "pagoAfiliaciones": int(numberAfiliaciones) * int(tasa.value) if tasa else 0,
     }
     return afiliaciones
 
@@ -129,14 +135,16 @@ def cooviahorro(name, current_file):
     }
     return listCooviahorros
 
+
 def cdats(name, current_file):
     """"""
     date = str(current_file).split("-")
     currentDate = f"{date[1]}-{date[0]}"
+    tasasCdats = CdatTasas.objects.all()
     cdats = readExcel(name,
                              "Cdat",
                              "PROMOTOR",
-                             ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_NOMINAL", "RETENCION", "PROMOTOR"],
+                             ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_EFECTIVA", "T_NOMINAL", "RETENCION", "PROMOTOR"],
                              current_file.file)
 
     setListCdats = [cdat for cdat in cdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
@@ -147,17 +155,58 @@ def cdats(name, current_file):
             'M_ANTERIOR': str(d['M_ANTERIOR']).split(".")[0],
             'Q_PLADIA': str(d['Q_PLADIA']).split(".")[0],
             'V_NUEVO': int(str(d['V_TITULO']).split(".")[0]) - int(str(d['M_ANTERIOR']).split(".")[0]),
-            'FACTOR_PLAZO': round(int(d['Q_PLADIA']) / 360, 2)
+            'FACTOR_PLAZO': round(d['Q_PLADIA'] / 360, 2),
+            'T_NOMINAL': round(d['T_NOMINAL'], 3),
         }
         for d in setListCdats]
     
     totalNuevo = sum(int(value['V_NUEVO']) for value in setCdats)
     totalRenovado = sum(int(value['M_ANTERIOR']) for value in setCdats)
+    
+    valuesCdats = Cdat.objects.all()
+    valueNew = 0
+    valueReno = 0
+    for valueCdat in valuesCdats:
+        valueMin = valueCdat.valueMin.replace(".", "")
+        valueMax = valueCdat.valueMax.replace(".", "")
+        if valueCdat.type == 'nuevo' and totalNuevo >= int(valueMin) and totalNuevo <= int(valueMax):
+            valueNew = valueCdat.value
+        if valueCdat.type == 'renovado' and totalRenovado >= int(valueMin) and totalRenovado <= int(valueMax):
+            valueReno = valueCdat.value
+
+    for cdats in setCdats:
+        for tasas in tasasCdats:
+            valorCdat = int(cdats['V_TITULO'])
+            valorminTasa = int(tasas.valueMin.replace(".", ""))
+            valormaxTasa = int(tasas.valueMax.replace(".", ""))
+            time = int(cdats['Q_PLADIA'])
+            timeMin = int(tasas.plazoMin)
+            timeMax = int(tasas.plazoMax)
+            if (valorCdat >= valorminTasa and valorCdat <= valormaxTasa) and (time >= timeMin and time <= timeMax):
+                cdats['T_REF'] = tasas.tasa
+                cdats['F_TASA'] = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3)
+                cdats['F_TP'] = round(cdats['F_TASA'] * cdats['FACTOR_PLAZO'], 2)
+                var = int(cdats['M_ANTERIOR']) / 1000000
+                vaar = float(var) * int(valueReno)
+                vReno = int(vaar * cdats['F_TP'])
+                van = int(cdats['V_NUEVO']) / 1000000
+                vaan = float(van) * int(valueNew)
+                vNew = int(vaan * cdats['F_TP'])
+                cdats['V_RENO'] = vReno
+                cdats['V_NUEV'] = vNew
+                continue
+    
+    comisionNuevo = sum(int(value['V_RENO']) for value in setCdats)
+    comisonRenovado = sum(int(value['V_NUEV']) for value in setCdats)
+    comisionTotal = comisionNuevo + comisonRenovado
 
     listCdats = {
         'cdats': setCdats,
         'totalNuevo': totalNuevo,
-        'totalRenovado': totalRenovado
+        'totalRenovado': totalRenovado,
+        'comiReno': comisonRenovado,
+        'comiNuevo': comisionNuevo,
+        'total': comisionTotal
     }
 
     return listCdats

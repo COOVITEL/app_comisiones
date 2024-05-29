@@ -57,3 +57,14 @@ class Cdat(models.Model):
     
     def __str__(self):
         return f"Cdats {self.type} desde {self.valueMin} hasta {self.valueMax}"
+
+class CdatTasas(models.Model):
+    """"""
+    plazoMin = models.CharField(max_length=100)
+    plazoMax = models.CharField(max_length=100)
+    valueMin = models.CharField(max_length=100)
+    valueMax = models.CharField(max_length=100)
+    tasa = models.FloatField()
+    
+    def __str__(self):
+        return f"Tasa {self.tasa}: Dias {self.plazoMin} - {self.plazoMax}, Monto: {self.valueMin} - {self.valueMax}"

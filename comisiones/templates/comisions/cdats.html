@@ -1,35 +1,52 @@
-<h4>Cdats</h4>
-
-<table>
+<div class="table">
+    <h4>Cdats</h4>
+    
+    <table>
     <tr>
-        <td>Codigo Interno</td>
-        {% comment %} <td>Nombre Nomina</td> {% endcomment %}
-        <td>Plazo</td>
-        <td>Valor Titulo</td>
-        <td>Monto Anterios</td>
-        <td>Monto Nuevo</td>
-        {% comment %} <td>Fecha Titulo</td> {% endcomment %}
-        <td>Tasa</td>
-        <td>Factor Tasa</td>
-        <td>Retencion</td>
+        <th>Codigo Interno</th>
+        <th>Nombre Nomina</th>
+        <th>Plazo</th>
+        <th>Valor Titulo</th>
+        <th>Monto Anterios</th>
+        <th>Monto Nuevo</th>
+        <th>Fecha Titulo</th>
+        <th>Tasa Efectiva</th>
+        <th>Tasa Nominal</th>
+        <th>Tasa Ref</th>
+        <th>Factor Plazo</th>
+        <th>Factor Tasa</th>
+        <th>Factor Tasa y Plazo</th>
+        <th>Comision Renovacion</th>
+        <th>Comision Nuevo</th>
+        {% comment %} <th>Retencion</th> {% endcomment %}
     </tr>
     {% for cdat in cdats.cdats %}
         <tr>
             <td>{{cdat.K_IDTERC}}</td>
-            {% comment %} <td>{{cdat.NOMBRE_TERCERO}}</td> {% endcomment %}
+            <td>{{cdat.NOMBRE_TERCERO}}</td>
             <td>{{cdat.Q_PLADIA}}</td>
             <td id="values">{{cdat.V_TITULO}}</td>
             <td id="values">{{cdat.M_ANTERIOR}}</td>
             <td id="values">{{cdat.V_NUEVO}}</td>
-            {% comment %} <td>{{cdat.F_TITULO}}</td> {% endcomment %}
+            <td>{{cdat.F_TITULO}}</td>
+            <td>{{cdat.T_EFECTIVA}}</td>
             <td>{{cdat.T_NOMINAL}}</td>
+            <td>{{cdat.T_REF}}</td>
             <td>{{cdat.FACTOR_PLAZO}}</td>
-            <td>{{cdat.RETENCION}}</td>
+            <td>{{cdat.F_TASA}}</td>
+            <td>{{cdat.F_TP}}</td>
+            <td>{{cdat.V_RENO}}</td>
+            <td>{{cdat.V_NUEV}}</td>
+            {% comment %} <td>{{cdat.RETENCION}}</td> {% endcomment %}
         </tr>
     {% endfor %}
-</table>
-<p>Total Nuevo de CDATS: $ <span id="values">{{cdats.totalNuevo}}</span></p>
-<p>Total Renovado de CDATS: $ <span id="values">{{cdats.totalRenovado}}</span></p>
+    </table>
+    <p>Total CDATS Nuevo: $ <span id="values">{{cdats.totalNuevo}}</span></p>
+    <p>Comision Nuevo: $ <span id="values">{{cdats.comiNuevo}}</span></p>
+    <p>Total CDATS Renovado: $ <span id="values">{{cdats.totalRenovado}}</span></p>
+    <p>Comision Renovado: $ <span id="values">{{cdats.comiReno}}</span></p>
+    <p>Comision Total: $ <span id="values">{{cdats.total}}</span></p>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

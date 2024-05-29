@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -67,3 +67,17 @@ class CdatForm(forms.ModelForm):
             'valueMax': 'Valor Maximo',
             'value': 'Valor Comisión'
         }
+        
+class CdatTasasForm(forms.ModelForm):
+    """"""
+    class Meta():
+        model = CdatTasas
+        fields = ['plazoMin', 'plazoMax', 'valueMin', 'valueMax', 'tasa']
+        labels= [
+            {'plazoMin': 'Plazo minimo en dias'},
+            {'plazoMax': 'Plazo maximo en dias'},
+            {'valueMin': 'Valor minimo'},
+            {'valueMin': 'Plazo minimo'},
+            {'tasa': 'Tasa'}
+            
+        ]

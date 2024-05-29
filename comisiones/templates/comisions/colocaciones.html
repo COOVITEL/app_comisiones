@@ -1,40 +1,34 @@
-<h4>Colocaciones</h4>
+<div class="table">
 
-<table>
-    <tr>
-        <td>A_OBLIGA</td>
-        <td>Nomina</td>
-        <td>Monto</td>
-        <td>Cartera</td>
-        <td>Neto Antes</td>
-        <td>P Tasa Efectiva</td>
-        <td>F corte</td>
-        <td>Suc produto</td>
-    </tr>
-    {% for col in colocaciones.colocaciones %}
+    <h4>Colocaciones</h4>
+
+    <table>
         <tr>
-            <td>{{col.A_OBLIGA}}</td>
-            <td>{{col.NOMINA}}</td>
-            <td id="values">{{col.MONTO}}</td>
-            <td id="values">{{col.CARTERA}}</td>
-            <td id="values">{{col.NETO_ANTES}}</td>
-            <td>{{col.P_TASEFEC}}</td>
-            <td>{{col.F_CORTE}}</td>
-            <td>{{col.SUC_PRODUCTO}}</td>
+            <th>A_OBLIGA</th>
+            <th>Nomina</th>
+            <th>Monto</th>
+            <th>Cartera</th>
+            <th>Neto Antes</th>
+            <th>P Tasa Efectiva</th>
+            <th>F corte</th>
+            <th>Suc produto</th>
         </tr>
-    {% endfor %}
-</table>
-<p>Valor total en Colocaciones: $ <span id="values">{{colocaciones.neto}}</span></p>
-<p>Valor total de Comision: $ <span id="values">{{colocaciones.comision}}</span></p>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var montos = document.querySelectorAll('#values');
-        montos.forEach(function(monto) {
-            if (monto.textContent!== '') {
-                var num = parseFloat(monto.textContent.replace(/,/g, ''));
-                monto.textContent = num.toLocaleString();
-            }
-        });
-    });
-</script>
+        {% for col in colocaciones.colocaciones %}
+            <tr>
+                <td>{{col.A_OBLIGA}}</td>
+                <td>{{col.NOMINA}}</td>
+                <td id="values">{{col.MONTO}}</td>
+                <td id="values">{{col.CARTERA}}</td>
+                <td id="values">{{col.NETO_ANTES}}</td>
+                <td>{{col.P_TASEFEC}}</td>
+                <td>{{col.F_CORTE}}</td>
+                <td>{{col.SUC_PRODUCTO}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p>Valor total en Colocaciones: $ <span id="values">{{colocaciones.neto}}</span></p>
+    <p>Valor total de Comision: $ <span id="values">{{colocaciones.comision}}</span></p>
+</div>
+
+
     

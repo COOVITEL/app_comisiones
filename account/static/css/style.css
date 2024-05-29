@@ -43,7 +43,7 @@ body {
     height: auto;
     min-height: 100%;
     min-height: 100vh;
-    overflow-y: scroll;
+    overflow-y: scroll; /* Mantén esta línea para permitir desplazamiento en todo el cuerpo si es necesario */
     background-color: var(--backColor);
     display: grid;
     grid-template-areas:
@@ -53,16 +53,20 @@ body {
 }
 
 aside {
-    height: 100%;
+    height: 100vh; /* Mantén esta línea para asegurar que el aside ocupe toda la altura disponible */
     grid-area: "aside";
     background-color: var(--colorOne);
+    position: sticky; /* Cambia a sticky para que se mantenga visible mientras se desplaza */
+    top: 0; /* Especifica desde dónde debe comenzar a ser fijo */
 }
 
 main {
     grid-area: "main";
     background-color: #f6f6f6;
-    height: 100%;
+    height: 100%; /* Asegúrate de que el main pueda crecer para llenar el espacio */
+    overflow-y: auto; /* Agrega esto para permitir desplazamiento dentro del main si es necesario */
 }
+
 
 a {
     text-decoration: none;
@@ -269,9 +273,6 @@ transform: translateX(-50%);
 @media only screen and (max-width: 900px){
     .links p, .out p {
         display: none;
-    }
-    aside {
-        height: auto;
     }
     .out {
         left: 0;

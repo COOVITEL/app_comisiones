@@ -1,25 +1,29 @@
-<h4>Afiliaciones</h4>
-
-<table>
+<div class="table">
+    <h4>Afiliaciones</h4>
+    
+    <table>
     <tr>
-        <td>Codigo Interno</td>
-        <td>Codigo Nomina</td>
-        <td>Nomina</td>
-        <td>Fecha Corte</td>
-        <td>Sucursal</td>
+        <th>Codigo Interno</th>
+        <th>Codigo Nomina</th>
+        <th>Nomina</th>
+        <th>Fecha Corte</th>
+        <th>Sucursal</th>
+        <th>Ahorro</th>
+        <th>Acumulado</th>
     </tr>
     {% for afi in afiliaciones.afiliaciones %}
-        <tr>
+        <tr class="rows">
             <td>{{afi.COD_INTERNO}}</td>
             <td>{{afi.CODNOMINA}}</td>
             <td>{{afi.NOMINA}}</td>
             <td>{{afi.F_CORTE}}</td>
             <td>{{afi.SUCURSAL}}</td>
-            <td>{{afi.ACUM_AHO}}</td>
-            <td>{{afi.ACUM_APO}}</td>
+            <td id="values">{{afi.ACUM_AHO}}</td>
+            <td id="values">{{afi.ACUM_APO}}</td>
         </tr>
-    {% endfor %}
-</table>
-<p>Numero de Afiliaciones: {{afiliaciones.numberAfiliaciones}} - Pago por afiliacion $ <span id="values">{{afiliaciones.tasas.value}}</span></p>
-<p>Total pago: $ <span id="values">{{afiliaciones.pagoAfiliaciones}}</span></p>
+        {% endfor %}
+    </table>
+    <p>Numero de Afiliaciones: {{afiliaciones.numberAfiliaciones}} - Pago por afiliacion $ <span id="values">{{afiliaciones.tasas}}</span></p>
+    <p>Total pago: $ <span id="values">{{afiliaciones.pagoAfiliaciones}}</span></p>
+</div>
 

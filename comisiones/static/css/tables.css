@@ -1,0 +1,56 @@
+.tables {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: scroll;
+    gap: 30px;
+}
+
+.tables h2 {
+    margin: 10px 0px;
+}
+
+.table {
+    overflow-x: auto;
+    padding: 10px;
+    border-radius: 10px;
+    border: 4px solid #cacaca;
+    background: #202D54;
+    height: auto;
+    width: auto;
+}
+
+.table h4 {
+    font-size: 20px;
+    margin: 5px 10px;
+    color: #fff;
+}
+
+table {
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px 5px;
+    width: 100%;
+}
+
+table th {
+    padding: 5px 8px;
+    text-align: center;
+}
+
+.rows {
+    border-bottom: 1px solid #f6f6f6;
+    border-top: 1px solid #f6f6f6;
+    padding: 5px 2px;
+}
+
+.table p {
+    color: white;
+    font-size: 20px;
+    margin: 5px 10px;
+}
+
+.table p span {
+    font-size: 24px;
+}
