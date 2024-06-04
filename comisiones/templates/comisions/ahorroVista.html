@@ -1,0 +1,32 @@
+<div class="table">
+    <h4>Ahorros Vista</h4>
+    
+    <table>
+    <tr>
+        <th>Cedula Asociado</th>
+        <th>Cuenta Asociado</th>
+        <th>Promedio</th>
+    </tr>
+    {% for ahorro in ahorrosVista.ahorrosVista %}
+        <tr class="rows">
+            <td>{{ahorro.CEDULA}}</td>
+            <td>{{ahorro.CUENTA}}</td>
+            <td>$ <span id="values">{{ahorro.PROMEDIO}}</span></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p>Saldo Promedio: $ <span id="values">{{ahorrosVista.promedio}}</span></p>
+    <p>Total pago: $ <span id="values"></span></p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var montos = document.querySelectorAll('#values');
+        montos.forEach(function(monto) {
+            if (monto.textContent!== '') {
+                var num = parseFloat(monto.textContent.replace(/,/g, ''));
+                monto.textContent = num.toLocaleString();
+            }
+        });
+    });
+</script>

@@ -11,7 +11,7 @@ def afiliaciones(name, current_file):
                              "Afiliaciones",
                              "PROMOTOR",
                              ["NOMBRES", "COD_INTERNO", "CODNOMINA", "NOMINA", "ACUM_APO", "ACUM_AHO", "PROMOTOR", "F_CORTE", "SUCURSAL"],
-                             current_file.file)
+                             current_file)
     
     setAfiliaciones = [afi for afi in afiliaciones if afi["ACUM_APO"] > 0]
     setListAfiliaciones = [
@@ -47,8 +47,7 @@ def colocaciones(name, current_file):
                              "Desembolsos",
                              "NNPROMOT",
                              ["A_OBLIGA", "NOMINA", "MONTO", "CARTERA", "NETO_ANTES", "P_TASEFEC", "NNPROMOT", "F_CORTE", "SUC_PRODUCTO"],
-                             current_file.file
-                             )
+                             current_file)
     setColocaciones = [
         {**d,
             'NETO_ANTES': str(d['NETO_ANTES']).split(".")[0],
@@ -83,7 +82,7 @@ def colocaciones(name, current_file):
     return colocations
 
 
-def cooviahorro(name, current_file):
+def cooviahorro(name, current_file, date):
     coovi = Cooviahorro.objects.all()
     comisionValue = coovi[0].value.replace(".", "")
     comisionMonto = coovi[0].monto.replace(".", "")
@@ -92,7 +91,7 @@ def cooviahorro(name, current_file):
                              "Cooviahorro",
                              "PROMOTOR",
                              ["AANUMNIT", "K_NUMDOC", "N_TIPODR", "SALDO", "PROMOTOR"],
-                             current_file.file)
+                             current_file)
     setCooviahorros = [
         {**d,
             'SALDO': str(d['SALDO']).split(".")[0],
@@ -100,16 +99,19 @@ def cooviahorro(name, current_file):
         for d in cooviahorros]
     
     monto = sum(int(value['SALDO']) for value in setCooviahorros)
-    date = str(current_file).split("-")
+    print(monto)
+    date = str(date).split("-")
     month = date[0]
     year = date[1]
     
     if not CooviahorroMonth.objects.filter(nameAsesor=name, year=year, month=month).exists():
         registerCoovi = CooviahorroMonth(nameAsesor=name, totalValue=monto, year=year, month=month, court=currentCourt)
         registerCoovi.save()
-    
+    # else:
+    #     current = CooviahorroMonth.objects.get(nameAsesor=name, year=year, month=month)
+    #     monto = current.totalValue
+
     asesorHistory = CooviahorroMonth.objects.filter(nameAsesor=name)
-    
     controlState = False
     controlPosition = 0
     value = 0
@@ -136,16 +138,16 @@ def cooviahorro(name, current_file):
     return listCooviahorros
 
 
-def cdats(name, current_file):
+def cdats(name, current_file, date):
     """"""
-    date = str(current_file).split("-")
+    date = str(date).split("-")
     currentDate = f"{date[1]}-{date[0]}"
     tasasCdats = CdatTasas.objects.all()
     cdats = readExcel(name,
                              "Cdat",
                              "PROMOTOR",
                              ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_EFECTIVA", "T_NOMINAL", "RETENCION", "PROMOTOR"],
-                             current_file.file)
+                             current_file)
 
     setListCdats = [cdat for cdat in cdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
 
@@ -210,3 +212,25 @@ def cdats(name, current_file):
     }
 
     return listCdats
+
+def ahorroVista(name, current_file):
+    """"""
+    ahorros = readExcel(name,
+                        "Promedio",
+                        "PROMOTOR",
+                        ["CEDULA ASOCIADO", "CUENTA ASOCIADO", "Promedio 30 días", "PROMOTOR"],
+                        current_file)
+    setAhorros = [
+        {
+            'CEDULA': d['CEDULA ASOCIADO'],
+            'CUENTA': d['CUENTA ASOCIADO'],
+            'PROMEDIO': int(d['Promedio 30 días'])
+        }
+        for d in ahorros]
+    promedio = sum(int(value['PROMEDIO']) for value in setAhorros)
+    listAhorros = {
+        'ahorrosVista': setAhorros,
+        'promedio': promedio
+    }
+    
+    return listAhorros

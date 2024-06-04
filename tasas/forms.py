@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -80,4 +80,18 @@ class CdatTasasForm(forms.ModelForm):
             {'valueMin': 'Plazo minimo'},
             {'tasa': 'Tasa'}
             
+        ]
+
+class AhorroVistaForm(forms.ModelForm):
+    """"""
+    valueMin = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMin')"}))
+    valueMax = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMax')"}))
+
+    class Meta():
+        model = AhorroVista
+        fields = ['valueMin', 'valueMax', 'porcentaje']
+        labels = [
+            {'valueMin': 'Valor minimo'},
+            {'valueMax': 'Valor maximo'},
+            {'porcentaje': 'Porcentaje'}
         ]

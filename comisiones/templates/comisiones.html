@@ -9,13 +9,15 @@
     <div class="tables">
         <h2>Comisiones {{asesor}}</h2>
     
-        {% include "comisions/afiliaciones.html" %}
+        {% comment %} {% include "comisions/afiliaciones.html" %} {% endcomment %}
         
-        {% include "comisions/colocaciones.html" %}
+        {% comment %} {% include "comisions/colocaciones.html" %} {% endcomment %}
         
-        {% include "comisions/cooviahorros.html" %}
+        {% comment %} {% include "comisions/cooviahorros.html" %} {% endcomment %}
         
-        {% include "comisions/cdats.html" %}
+        {% comment %} {% include "comisions/cdats.html" %} {% endcomment %}
+
+        {% include "comisions/ahorroVista.html" %}
     </div>
 {% endblock %}
 

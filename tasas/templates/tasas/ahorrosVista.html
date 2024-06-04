@@ -1,0 +1,37 @@
+<table>
+    <tr>
+        <th>Valor Minimo</th>
+        <th>Valor Maximo</th>
+        <th>Porcentaje</th>
+    </tr>
+    {% for ahorro in ahorros %}
+        <tr>
+            <th>{{ahorros.valueMin}}</th>
+            <th>{{ahorros.valueMax}}</th>
+            <th>{{ahorros.porcentaje}}</th>
+        </tr>
+    {% endfor %}
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    {{ formAhorro.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+
+    <script>
+        function handleChange(idName) {
+            var inputElement = document.getElementById(idName);
+            inputElement.value = inputElement.value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+            var inputValue = inputElement.value.replace('.', '').split("").reverse(); // Reversa el valor para facilitar la inserción de puntos
+            var newValue = '';
+            for (var i = 0; i < inputValue.length; i++) {
+                if (i % 3 == 0 && i!= 0) { // Agrega un punto cada tres dígitos, excepto al inicio
+                    newValue += '.';
+                }
+                newValue += inputValue[i];
+            }
+            inputElement.value = newValue.split("").reverse().join(""); // Revierte el valor y lo establece en el input
+        }
+      
+      </script>

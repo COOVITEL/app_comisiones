@@ -68,3 +68,12 @@ class CdatTasas(models.Model):
     
     def __str__(self):
         return f"Tasa {self.tasa}: Dias {self.plazoMin} - {self.plazoMax}, Monto: {self.valueMin} - {self.valueMax}"
+
+class AhorroVista(models.Model):
+    """"""
+    valueMin = models.CharField(max_length=100)
+    valueMax = models.CharField(max_length=100)
+    porcentaje = models.FloatField()
+    
+    def __str__(self):
+        return f"Pago por ahorro vista por promedio mayor a {self.valueMin} y menor a {self.valueMax}, paga el {self.porcentaje}"

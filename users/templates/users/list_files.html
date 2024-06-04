@@ -3,18 +3,18 @@
 
 {% block content %}
     <h2>Lista de archivos</h2>
-    <p>Selecciona un archivo</p>
+    <p>Selecciona el mes que quieres consultar tus comisiones</p>
 
     <table>
         <tr>
-            <th>Fecha</th>
-            <th>Archivo</th>
+            <th>Mes</th>
+            <th>Año</th>
             <th></th>
         </tr>
         {% for file in files %}
             <tr>
-                <td>{{file.full_date}}</td>
-                <td>{{file.file}}</td>
+                <td>{{file.month}}</td>
+                <td>{{file.year}}</td>
                 <td><a href="{% url "list_asesor" file.full_date %}">Seleccionar</a></td>
             </tr>
         {% endfor %}
