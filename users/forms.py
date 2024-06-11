@@ -6,12 +6,13 @@ class FileForm(ModelForm):
     """"""
     class Meta:
         model = File
-        fields = ['month', 'year', 'fileComisiones', 'fileAhorroVista']
+        fields = ['month', 'year', 'fileComisiones', 'fileAhorroVista', 'fileCrecimientoBase']
         labels = {
             'month': 'Mes',
             'year': 'Año',
             'fileComisiones': 'Archivo Comisiones',
-            'fileAhorroVista': 'Archivo Ahorro Vista'
+            'fileAhorroVista': 'Archivo Ahorro Vista',
+            'fileCrecimientoBase': 'Archivo Crecimiento Base'
         }
         
     def clean(self):
@@ -21,8 +22,9 @@ class FileForm(ModelForm):
         
         fileComisiones = cleaned_data.get('fileComisiones')
         fileAhorroVista = cleaned_data.get('fileAhorroVista')
+        fileCrecimientoBase = cleaned_data.get('fileCrecimientoBase')
         
-        if ".xlsx" in fileComisiones and ".xlsx" in fileAhorroVista:
+        if ".xlsx" in fileComisiones and ".xlsx" in fileAhorroVista and ".xlsx" in fileCrecimientoBase:
             raise ValidationError("El archivo debe ser de formato xlsx")
         
         if File.objects.filter(year=year, month=month).exists():

@@ -29,8 +29,9 @@ class File(models.Model):
     """"""
     month = models.IntegerField(choices=MONTH_CHOICES)
     year = models.IntegerField(choices=YEAR_CHOICES)
-    fileComisiones = models.FileField(upload_to='uploads/')
-    fileAhorroVista = models.FileField(upload_to='uploads/')
+    fileComisiones = models.FileField(upload_to='uploads/', default="emptycomisiones.xlsx")
+    fileAhorroVista = models.FileField(upload_to='uploads/', default="emptyahorro.xlsx")
+    fileCrecimientoBase = models.FileField(upload_to='uploads', default="empty.xlsx")
     created = models.DateField(auto_now_add=True) 
     
     @property

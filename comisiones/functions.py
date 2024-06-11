@@ -1,6 +1,6 @@
 from users.models import File
 from .read_excel import readExcel
-from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista
+from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial
 from users.models import Asesor, CooviahorroMonth, Court
 import math
 
@@ -226,6 +226,7 @@ def cdats(name, current_file, date):
 def ahorroVista(name, current_file):
     """"""
     ahorrosVista = AhorroVista.objects.all()
+    
     ahorros = readExcel(name,
                         "Promedio",
                         "PROMOTOR",
@@ -252,3 +253,25 @@ def ahorroVista(name, current_file):
     
     return listAhorros
 
+
+def crecimientoBase(name, current_file):
+    """"""
+    setname = name.split(" ")
+    setList = []
+    for word in setname:
+        setList.append(word.capitalize())
+    newName = " ".join(setList)
+    crecimientoBase = CrecimientoBaseSocial.objects.all()
+    
+    crecimiento = readExcel(newName,
+                            "Afiliaciones Promotor",
+                            "Gestor",
+                            ["Gestor", "EJEC", "PPTO", "% CUMP"],
+                            current_file
+                            )
+    print(crecimiento)
+    listCrecimiento = {
+        'crecimientoBase': 12
+    }
+    
+    return listCrecimiento
