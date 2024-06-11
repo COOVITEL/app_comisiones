@@ -11,10 +11,10 @@ def comisiones(request, name, file):
     dates = {
             "file": file,
             "asesor": name,
-            # "afiliaciones": afiliaciones(name, archivoComisiones),
-            # "colocaciones": colocaciones(name, archivoComisiones),
-            # "cooviahorros": cooviahorro(name, archivoComisiones, file),
-            # "cdats": cdats(name, archivoComisiones, file),
+            "afiliaciones": afiliaciones(name, archivoComisiones),
+            "colocaciones": colocaciones(name, archivoComisiones),
+            "cooviahorros": cooviahorro(name, archivoComisiones, file),
+            "cdats": cdats(name, archivoComisiones, file),
             "ahorrosVista": ahorroVista(name, archivoAhorriVista)
             #"rotativo": readExcel(name, "Rotativos", ["A_NUMNIT", "N_NOMBRE", "CODNOMINA", "NOMINA", "N_MODALI", "A_OBLIGA", "SUMA_UTL", "F_CORTE", "SUC_PRODUCTO"]),
             #"ahorros": readExcel(name, "Ah Vista", "PROMOTOR", ["COD_INTERNO", "NNASOCIA", "CODNOMINA", "NOMINA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"])

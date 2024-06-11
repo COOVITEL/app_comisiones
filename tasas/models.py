@@ -56,7 +56,7 @@ class Cdat(models.Model):
     value = models.CharField(max_length=100)
     
     def __str__(self):
-        return f"Cdats {self.type} desde {self.valueMin} hasta {self.valueMax}"
+        return f"Cdats {self.rol} {self.type} desde {self.valueMin} hasta {self.valueMax}, comision: {self.value}"
 
 class CdatTasas(models.Model):
     """"""
@@ -77,3 +77,11 @@ class AhorroVista(models.Model):
     
     def __str__(self):
         return f"Pago por ahorro vista por promedio mayor a {self.valueMin} y menor a {self.valueMax}, paga el {self.porcentaje}"
+
+class CrecimientoBaseSocial(models.Model):
+    """"""
+    porcentaje = models.FloatField()
+    value = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f"Etsa comision aplica si se supera el {self.porcentaje}, un valor de {self.value} por afiliacion"

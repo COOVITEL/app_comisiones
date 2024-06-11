@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista
-from .forms import AfiliacionesForm, ColocacionesForm, CooviahorroForm, CdatForm, CdatTasasForm, AhorroVistaForm
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial
+from .forms import AfiliacionesForm, ColocacionesForm, CooviahorroForm, CdatForm, CdatTasasForm, AhorroVistaForm, CrecimientoBaseSocialForm
 
 @login_required
 def controlTasas(request):
@@ -12,6 +12,7 @@ def controlTasas(request):
     cdats = Cdat.objects.all()
     cdatstasas = CdatTasas.objects.all()
     ahorros = AhorroVista.objects.all()
+    crecimeintoBase = CrecimientoBaseSocial.objects.all()
     
     formAfi = AfiliacionesForm()
     formCol = ColocacionesForm()
@@ -19,6 +20,7 @@ def controlTasas(request):
     formCdat = CdatForm()
     formCdatTasas = CdatTasasForm()
     formAhorro = AhorroVistaForm()
+    formCrecimientoBase = CrecimientoBaseSocialForm()
     
     if request.method == "POST":
         formAfi = AfiliacionesForm(request.POST)
@@ -27,6 +29,7 @@ def controlTasas(request):
         formCdat = CdatForm(request.POST)
         formCdatTasas = CdatTasasForm(request.POST)
         formAhorro = AhorroVistaForm(request.POST)
+        formCrecimientoBase = CrecimientoBaseSocialForm(request.POST)
         if formAfi.is_valid():
             formAfi.save()
             return redirect('tasas')
@@ -45,6 +48,9 @@ def controlTasas(request):
         if formAhorro.is_valid():
             formAhorro.save()
             return redirect('tasas')
+        if formCrecimientoBase.is_valid():
+            formCrecimientoBase.save()
+            return redirect('tasas')
 
     return render(request, 'control.html',
                   {'afiliaciones': list_afiliaciones,
@@ -53,10 +59,13 @@ def controlTasas(request):
                     'cdats': cdats,
                     'cdatstasas': cdatstasas,
                     'ahorros': ahorros,
+                    'crecimientoBase': crecimeintoBase,
                     'formAfi': formAfi,
                     'formCol': formCol,
                     'formCoovi': formCoovi,
                     'formCdat': formCdat,
                     'formCdatTasas': formCdatTasas,
-                    'formAhorro': formAhorro})
+                    'formAhorro': formAhorro,
+                    'formCrecimientoBase': formCrecimientoBase
+                    })
 

@@ -1,6 +1,6 @@
 from users.models import File
 from .read_excel import readExcel
-from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas
+from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista
 from users.models import Asesor, CooviahorroMonth, Court
 import math
 
@@ -99,7 +99,6 @@ def cooviahorro(name, current_file, date):
         for d in cooviahorros]
     
     monto = sum(int(value['SALDO']) for value in setCooviahorros)
-    print(monto)
     date = str(date).split("-")
     month = date[0]
     year = date[1]
@@ -140,6 +139,7 @@ def cooviahorro(name, current_file, date):
 
 def cdats(name, current_file, date):
     """"""
+    asesor = Asesor.objects.get(name=name)
     date = str(date).split("-")
     currentDate = f"{date[1]}-{date[0]}"
     tasasCdats = CdatTasas.objects.all()
@@ -166,16 +166,21 @@ def cdats(name, current_file, date):
     totalRenovado = sum(int(value['M_ANTERIOR']) for value in setCdats)
     
     valuesCdats = Cdat.objects.all()
+    
+    if str(asesor.rol) == "Captaciones":
+        setValuesCdats = [values for values in valuesCdats if str(values.rol) == "Captaciones"]
+    else:
+        setValuesCdats = [values for values in valuesCdats if str(values.rol) != "Captaciones"]
+
     valueNew = 0
     valueReno = 0
-    for valueCdat in valuesCdats:
+    for valueCdat in setValuesCdats:
         valueMin = valueCdat.valueMin.replace(".", "")
         valueMax = valueCdat.valueMax.replace(".", "")
         if valueCdat.type == 'nuevo' and totalNuevo >= int(valueMin) and totalNuevo <= int(valueMax):
             valueNew = valueCdat.value
         if valueCdat.type == 'renovado' and totalRenovado >= int(valueMin) and totalRenovado <= int(valueMax):
             valueReno = valueCdat.value
-
     for cdats in setCdats:
         for tasas in tasasCdats:
             valorCdat = int(cdats['V_TITULO'])
@@ -194,6 +199,10 @@ def cdats(name, current_file, date):
                 van = int(cdats['V_NUEVO']) / 1000000
                 vaan = float(van) * int(valueNew)
                 vNew = int(vaan * cdats['F_TP'])
+                if vReno < 0:
+                    vReno = 0
+                if vNew < 0:
+                    vNew = 0
                 cdats['V_RENO'] = vReno
                 cdats['V_NUEV'] = vNew
                 continue
@@ -213,8 +222,10 @@ def cdats(name, current_file, date):
 
     return listCdats
 
+
 def ahorroVista(name, current_file):
     """"""
+    ahorrosVista = AhorroVista.objects.all()
     ahorros = readExcel(name,
                         "Promedio",
                         "PROMOTOR",
@@ -228,9 +239,16 @@ def ahorroVista(name, current_file):
         }
         for d in ahorros]
     promedio = sum(int(value['PROMEDIO']) for value in setAhorros)
+    
+    for ahorro in ahorrosVista:
+        if promedio >= int(ahorro.valueMin.replace(".", "")) and promedio <= int(ahorro.valueMax.replace(".", "")):
+            comision = int(round(promedio * (ahorro.porcentaje / 100), 0))
+    
     listAhorros = {
         'ahorrosVista': setAhorros,
-        'promedio': promedio
+        'promedio': promedio,
+        'comision': comision
     }
     
     return listAhorros
+

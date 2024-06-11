@@ -1,0 +1,18 @@
+<table>
+    <tr>
+        <th>Crecimiento</th>
+        <th>Valor</th>
+    </tr>
+    {% for crecimiento in crecimientoBase %}
+        <tr>
+            <th>{{crecimiento.porcentaje}}</th>
+            <th>{{crecimiento.value}}</th>
+        </tr>
+    {% endfor %}
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    {{ formCrecimientoBase.as_p }}
+    <button type="submit">Guardar</button>
+</form>
