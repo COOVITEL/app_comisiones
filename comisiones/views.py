@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .functions import afiliaciones, colocaciones, cooviahorro, cdats, ahorroVista, crecimientoBase
+from .functions import afiliaciones, colocaciones, cooviahorro, cdats, ahorroVista, crecimientoBase, checkMeta
 from users.models import File, Asesor
 
 def comisiones(request, name, file):
@@ -14,6 +14,9 @@ def comisiones(request, name, file):
     archivoComisiones = current_file.fileComisiones
     archivoAhorriVista = current_file.fileAhorroVista
     archivoCrecimientoBase = current_file.fileCrecimientoBase
+    archivoCdat = current_file.fileCrecimientoCDAT
+    archivoCoovi = current_file.fileCrecimientoCooviahorro
+    archivoAhorro = current_file.fileCrecimientoAhorro
     dates = {
             "file": file,
             "asesor": name,
@@ -24,7 +27,7 @@ def comisiones(request, name, file):
             "cdats": cdats(name, archivoComisiones, file),
             "ahorrosVista": ahorroVista(name, archivoAhorriVista),
             "crecimientoBase": crecimientoBase(name, archivoCrecimientoBase),
-            # "crecimientoCDAT": crecimientoCdat(name, )
+            "checkMeta": checkMeta(name, archivoCdat, archivoCoovi, archivoAhorro)
             #"rotativo": readExcel(name, "Rotativos", ["A_NUMNIT", "N_NOMBRE", "CODNOMINA", "NOMINA", "N_MODALI", "A_OBLIGA", "SUMA_UTL", "F_CORTE", "SUC_PRODUCTO"]),
             #"ahorros": readExcel(name, "Ah Vista", "PROMOTOR", ["COD_INTERNO", "NNASOCIA", "CODNOMINA", "NOMINA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"])
         }

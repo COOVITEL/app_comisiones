@@ -295,3 +295,36 @@ def crecimientoBase(name, current_file):
     
     return listCrecimiento
 
+
+def checkMeta(name, fileCDAT, fileCoovi, fileAhorro):
+    asesor = Asesor.objects.get(name=name)
+    setname = name.split(" ")
+    setList = []
+    for word in setname:
+        setList.append(word.capitalize())
+    newName = " ".join(setList)
+    print(newName)
+    cdat = readExcel(newName,
+                        "CDAT Promotor Abril",
+                        "Gestor",
+                        ["Gestor", "EJEC", "PPTO", "% CUMP"],
+                        fileCDAT
+                        )
+    cooviahorro = readExcel(newName,
+                        "Cooviahorro Promotor Abril",
+                        "Gestor",
+                        ["Gestor", "EJEC", "PPTO", "% CUMP"],
+                        fileCoovi
+                        )
+    ahorroVista = readExcel(newName,
+                        "Ahorro Vista Promotor Abril",
+                        "Gestor",
+                        ["Gestor", "EJEC", "PPTO", "% CUMP"],
+                        fileAhorro
+                        )
+    print(cdat)
+    print(cooviahorro)
+    print(ahorroVista)
+    return {
+        'hola': "hola"
+    }
