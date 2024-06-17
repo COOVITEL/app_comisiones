@@ -24,6 +24,7 @@ def comisiones(request, name, file):
             "cdats": cdats(name, archivoComisiones, file),
             "ahorrosVista": ahorroVista(name, archivoAhorriVista),
             "crecimientoBase": crecimientoBase(name, archivoCrecimientoBase),
+            # "crecimientoCDAT": crecimientoCdat(name, )
             #"rotativo": readExcel(name, "Rotativos", ["A_NUMNIT", "N_NOMBRE", "CODNOMINA", "NOMINA", "N_MODALI", "A_OBLIGA", "SUMA_UTL", "F_CORTE", "SUC_PRODUCTO"]),
             #"ahorros": readExcel(name, "Ah Vista", "PROMOTOR", ["COD_INTERNO", "NNASOCIA", "CODNOMINA", "NOMINA", "SALDO", "PROMOTOR", "F_CORTE", "SUC_PRODUCTO"])
         }

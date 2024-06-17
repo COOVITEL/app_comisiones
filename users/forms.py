@@ -18,14 +18,24 @@ class FileForm(ModelForm):
     """"""
     class Meta:
         model = File
-        fields = ['month', 'year', 'fileComisiones', 'fileAhorroVista', 'fileCrecimientoBase', 'fileCrecimientoCDAT']
+        fields = ['month',
+                  'year',
+                  'fileComisiones',
+                  'fileAhorroVista',
+                  'fileCrecimientoBase',
+                  'fileCrecimientoCDAT',
+                  'fileCrecimientoCooviahorro',
+                  'fileCrecimientoAhorro'
+                  ]
         labels = {
             'month': 'Mes',
             'year': 'Año',
             'fileComisiones': 'Archivo Comisiones',
             'fileAhorroVista': 'Archivo Ahorro Vista',
             'fileCrecimientoBase': 'Archivo Crecimiento Base',
-            'fileCrecimientoCDAT': 'Archivo Crecimiento CDAT'
+            'fileCrecimientoCDAT': 'Archivo Crecimiento CDAT',
+            'fileCrecimientoCooviahorro': 'Archivo Crecimiento Coociahorro',
+            'fileCrecimientoAhorro': 'Archivo Captacion Ahorro Vista Canal'
         }
         
     def clean(self):
@@ -37,8 +47,10 @@ class FileForm(ModelForm):
         fileAhorroVista = cleaned_data.get('fileAhorroVista')
         fileCrecimientoBase = cleaned_data.get('fileCrecimientoBase')
         fileCrecimientoCDAT = cleaned_data.get('fileCrecimientoCDAT')
+        fileCrecimientoCooviahorro = cleaned_data.get('fileCrecimientoCooviahorro')
+        fileCrecimientoAhorro = cleaned_data.get('fileCrecimientoAhorro')
         
-        if all(".xlsx" in archivo for archivo in (fileComisiones, fileAhorroVista, fileCrecimientoBase, fileCrecimientoCDAT)):
+        if all(".xlsx" in archivo for archivo in (fileComisiones, fileAhorroVista, fileCrecimientoBase, fileCrecimientoCDAT, fileCrecimientoCooviahorro, fileCrecimientoAhorro)):
             raise ValidationError("El archivo debe ser de formato xlsx")
         
         if File.objects.filter(year=year, month=month).exists():

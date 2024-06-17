@@ -171,10 +171,10 @@ def cdats(name, current_file, date):
     
     valuesCdats = Cdat.objects.all()
     
-    if str(asesor.rol) == "Captaciones":
-        setValuesCdats = [values for values in valuesCdats if str(values.rol) == "Captaciones"]
+    if "Captaciones" in str(asesor.rol):
+        setValuesCdats = [values for values in valuesCdats if "Captaciones" in str(values.rol)]
     else:
-        setValuesCdats = [values for values in valuesCdats if str(values.rol) != "Captaciones"]
+        setValuesCdats = [values for values in valuesCdats if "Captaciones" not in str(values.rol)]
 
     valueNew = 0
     valueReno = 0
@@ -185,6 +185,7 @@ def cdats(name, current_file, date):
             valueNew = valueCdat.value
         if valueCdat.type == 'renovado' and totalRenovado >= int(valueMin) and totalRenovado <= int(valueMax):
             valueReno = valueCdat.value
+    
     for cdats in setCdats:
         for tasas in tasasCdats:
             valorCdat = int(cdats['V_TITULO'])

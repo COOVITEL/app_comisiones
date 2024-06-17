@@ -41,6 +41,8 @@ class File(models.Model):
     fileAhorroVista = models.FileField(upload_to='uploads/', default="emptyahorro.xlsx")
     fileCrecimientoBase = models.FileField(upload_to='uploads', default="empty.xlsx")
     fileCrecimientoCDAT = models.FileField(upload_to='uploads', default="emptyCrecimientoBase.xlsx")
+    fileCrecimientoCooviahorro = models.FileField(upload_to='uploads', default="emptyCrecimientoCooviahorro.xlsx")
+    fileCrecimientoAhorro = models.FileField(upload_to='uploads', default="emptyCrecimientoAhorro.xlsx")
     created = models.DateField(auto_now_add=True) 
     
     @property
