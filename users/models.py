@@ -11,12 +11,20 @@ class Sucursale(models.Model):
 
     def __str__(self) -> str:
         return self.city
+    
+class Subzona(models.Model):
+    """"""
+    subzona = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.subzona
 
 class Asesor(models.Model):
     """"""
     name = models.CharField(max_length=100)
     rol = models.ForeignKey(Roles, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursale, on_delete=models.CASCADE)
+    subzona = models.ForeignKey(Subzona, on_delete=models.CASCADE, null=True)
     cooviahorro = models.CharField(max_length=500, default="0")
 
     def __str__(self) -> str:
@@ -44,7 +52,6 @@ class File(models.Model):
     
     class Meta:
         ordering = ['-created']
-
 
 class CooviahorroMonth(models.Model):
     """"""

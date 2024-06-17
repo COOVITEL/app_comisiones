@@ -1,6 +1,18 @@
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
-from .models import File, Asesor
+from .models import Sucursale, Subzona, File, Asesor
+
+class SucursalForm(ModelForm):
+    class Meta:
+        model = Sucursale
+        fields = ['city']
+        labels = {'city': 'Ciudad'}
+
+class SubzonaForm(ModelForm):
+    class Meta:
+        model = Subzona
+        fields = ['subzona']
+        labels = {'subzona': 'Subzona'}
 
 class FileForm(ModelForm):
     """"""
@@ -36,9 +48,10 @@ class FileForm(ModelForm):
 class AsesorForm(ModelForm):
     class Meta:
         model = Asesor
-        fields = ['name', 'rol', 'sucursal']
+        fields = ['name', 'rol', 'sucursal', 'subzona']
         labels = {
             'name': 'Nombre',
             'rol': 'Rol del asesor',
-            'sucursal': 'Sucursal'
+            'sucursal': 'Sucursal',
+            'subzona': 'Subzona'
         }

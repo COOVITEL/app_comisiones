@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Asesor, Sucursale, File
-from .forms import FileForm, AsesorForm
+from .models import Asesor, Sucursale, File, Subzona
+from .forms import FileForm, AsesorForm, SubzonaForm, SucursalForm
 
 @login_required
 def asesores(request):
@@ -29,7 +29,7 @@ def asesores(request):
     else:
         asesores = Asesor.objects.filter(sucursal__city=city).order_by('id')
 
-    paginator = Paginator(asesores, 5)
+    paginator = Paginator(asesores, 10)
     page_number = request.GET.get('page', 1)
 
     try:
@@ -52,17 +52,18 @@ def deleteasesor(request, id):
 @login_required
 def sucursales(request):
     """"""
+    form = SucursalForm()
     user_permissions = False
+    citys = Sucursale.objects.all()
     if request.user.is_superuser:
         user_permissions = True
-    citys = Sucursale.objects.all()
     if request.method == "POST":
-        city = request.POST['city']
-        create = Sucursale(city=city)
-        create.save()
+        form = SucursalForm(request.POST)
+        form.save()
         return redirect("sucursales")
     return render(request, "users/sucursales.html",
                             {"citys": citys,
+                             "form": form,
                              "permission": user_permissions})
 
 @login_required
@@ -71,6 +72,30 @@ def deleteSucursal(request, id):
     sucursal = Sucursale.objects.get(id=id)
     sucursal.delete()
     return redirect("sucursales")
+
+@login_required
+def subzona(request):
+    """"""
+    form = SubzonaForm()
+    user_permissions = False
+    subzonas = Subzona.objects.all()
+    if request.user.is_superuser:
+        user_permissions = True
+    if request.method == "POST":
+        form = SubzonaForm(request.POST)
+        form.save()
+        return redirect("subzonas")
+    return render(request, "users/subzonas.html",
+                            {"subzonas": subzonas,
+                             "form": form,
+                             "permission": user_permissions})
+
+@login_required
+def deleteSubzona(request, id):
+    """"""
+    subzona = Subzona.objects.get(id=id)
+    subzona.delete()
+    return redirect("subzonas")
 
 @login_required
 def files(request):

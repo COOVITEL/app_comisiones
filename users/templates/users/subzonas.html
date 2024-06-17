@@ -2,18 +2,18 @@
 {% load static %}
 
 {% block content %}
-    <h2 class="title">Sucursales</h2>
+    <h2 class="title">Subzonas</h2>
     <div>
         <table>
             <tr>
-                <td>Sucursal</td>
+                <td>Subzona</td>
                 <td></td>
             </tr>
-            {% for city in citys %}
+            {% for subzona in subzonas %}
                 <tr>
-                    <td>{{city.city}}</td>
+                    <td>{{subzona.subzona}}</td>
                     {% if permission %}
-                        <td><a href="{% url 'deletesucursal' city.id %}" onclick="return confirm('Esta seguro de eliminar la Sucursal {{city.city}}?')">Borrar</a></td>
+                        <td><a href="{% url 'deletesubzona' subzona.id %}" onclick="return confirm('Esta seguro de eliminar la Subzona {{subzona.subzona}}?')">Borrar</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}

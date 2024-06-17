@@ -46,7 +46,14 @@
         {% include "pagination.html" with page=asesors %}
 
         {% if permission %}         
-            {% include "users/createasesor.html" %}
+            <div>
+                <h2>Nuevo asesor</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                    <input type="submit" value"Subir"/>
+                </form>
+            </div>
         {% endif %}
 
     </div>    
