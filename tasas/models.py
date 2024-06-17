@@ -85,3 +85,13 @@ class CrecimientoBaseSocial(models.Model):
     
     def __str__(self):
         return f"Etsa comision aplica si se supera el {self.porcentaje}, un valor de {self.value} por afiliacion"
+
+class CrecimientoCDAT(models.Model):
+    """"""
+    medida = models.CharField(max_length=100)
+    tasaMin = models.FloatField()
+    tasaMax = models.FloatField()
+    comision = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f"Comision Crecimiento CDAT: {self.comision} entre tasas del {self.tasaMin} - {self.tasaMax}"

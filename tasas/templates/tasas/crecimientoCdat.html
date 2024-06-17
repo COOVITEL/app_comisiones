@@ -1,0 +1,30 @@
+{% extends "control.html" %}
+
+{% load static %}
+
+{% block tasas %}
+
+    <table>
+        <tr>
+            <th>Medida</th>
+            <th>Tasa Minima</th>
+            <th>Tasa Maxima</th>
+            <th>Comision</th>
+        </tr>
+        {% for crecimiento in crecimientoCdat %}
+            <tr>
+                <th>{{crecimiento.medida}}</th>
+                <th>{{crecimiento.tasaMin}}</th>
+                <th>{{crecimiento.tasaMax}}</th>
+                <th>{{crecimiento.comision}}</th>
+            </tr>
+        {% endfor %}
+    </table> 
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+
+{% endblock tasas %}

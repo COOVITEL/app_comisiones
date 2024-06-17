@@ -1,30 +1,37 @@
-<table>
-    <tr>
-        <th>Colocaciones</th>
-        <th>Descripcion</th>
-        <th>Rol</th>
-        <th>Tasa desde</th>
-        <th>Tasa hasta</th>
-        <th>Valor Minimo</th>
-        <th>Valor Maximo</th>
-        <th>Monto</th>
-    </tr>
-    {% for colocacion in col %}
-        <tr>
-            <th>{{colocacion.name}}</th>
-            <th>{{colocacion.description}}</th>
-            <th>{{colocacion.rol}}</th>
-            <th>{{colocacion.tasa_min}}</th>
-            <th>{{colocacion.tasa_max}}</th>
-            <th>{{colocacion.value_min}}</th>
-            <th>{{colocacion.value_max}}</th>
-            <th>{{colocacion.value}}</th>
-        </tr>
-    {% endfor %}
-</table>
+{% extends "control.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ formCol.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+{% load static %}
+
+{% block tasas %}
+
+    <table>
+        <tr>
+            <th>Colocaciones</th>
+            <th>Descripcion</th>
+            <th>Rol</th>
+            <th>Tasa desde</th>
+            <th>Tasa hasta</th>
+            <th>Valor Minimo</th>
+            <th>Valor Maximo</th>
+            <th>Monto</th>
+        </tr>
+        {% for colocacion in colocaciones %}
+            <tr>
+                <th>{{colocacion.name}}</th>
+                <th>{{colocacion.description}}</th>
+                <th>{{colocacion.rol}}</th>
+                <th>{{colocacion.tasa_min}}</th>
+                <th>{{colocacion.tasa_max}}</th>
+                <th>{{colocacion.value_min}}</th>
+                <th>{{colocacion.value_max}}</th>
+                <th>{{colocacion.value}}</th>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock tasas%}

@@ -1,24 +1,30 @@
-<table>
-    <tr>
-        <th>Dias Minimo</th>
-        <th>Dias Maximo</th>
-        <th>Valor Minimo</th>
-        <th>Valor Maximo</th>
-        <th>Tasa</th>
-    </tr>
-    {% for cdat in cdatstasas %}
-        <tr>
-            <th>{{cdat.plazoMin}}</th>
-            <th>{{cdat.plazoMax}}</th>
-            <th>{{cdat.valueMin}}</th>
-            <th>{{cdat.valueMax}}</th>
-            <th>{{cdat.tasa}}</th>
-        </tr>
-    {% endfor %}
-</table>
+{% extends "control.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ formCdatTasas.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+{% load static %}
+
+{% block tasas %}
+    <table>
+        <tr>
+            <th>Dias Minimo</th>
+            <th>Dias Maximo</th>
+            <th>Valor Minimo</th>
+            <th>Valor Maximo</th>
+            <th>Tasa</th>
+        </tr>
+        {% for cdat in cdatsTasas %}
+            <tr>
+                <th>{{cdat.plazoMin}}</th>
+                <th>{{cdat.plazoMax}}</th>
+                <th>{{cdat.valueMin}}</th>
+                <th>{{cdat.valueMax}}</th>
+                <th>{{cdat.tasa}}</th>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock tasas %}

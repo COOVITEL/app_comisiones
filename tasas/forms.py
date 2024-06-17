@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -106,4 +106,18 @@ class CrecimientoBaseSocialForm(forms.ModelForm):
         labels = [
             {'porcentaje': 'Porcentaje Minimo para aplicar'},
             {'value': 'Valor por afiliacion'},
+        ]
+
+class CrecimientoCDATForm(forms.ModelForm):
+    """"""
+    medida = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_medida')"}))
+    comision = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_comision')"}))
+    class Meta:
+        model = CrecimientoCDAT
+        fields = ['medida', 'tasaMin', 'tasaMax', 'comision']
+        labels = [
+            {'medida': 'Valor de medida de comisión'},
+            {'tasaMin': 'Tasa minima promedio'},
+            {'valueMax': 'Tasa maxima promedio'},
+            {'comision': 'Valor de comision'}
         ]

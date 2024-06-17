@@ -1,24 +1,31 @@
-<table>
-    <tr>
-        <th>Afiliaciones</th>
-        <th>Rol</th>
-        <th>Desde</th>
-        <th>Hasta</th>
-        <th>Valor por afiliacion</th>
-    </tr>
-    {% for afiliacion in afiliaciones %}
-        <tr>
-            <th>{{afiliacion.name}}</th>
-            <th>{{afiliacion.rol}}</th>
-            <th>{{afiliacion.since}}</th>
-            <th>{{afiliacion.until}}</th>
-            <th>{{afiliacion.value}}</th>
-        </tr>
-    {% endfor %}
-</table>
+{% extends "control.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ formAfi.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+{% load static %}
+
+{% block tasas %}
+
+    <table>
+        <tr>
+            <th>Afiliaciones</th>
+            <th>Rol</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Valor por afiliacion</th>
+        </tr>
+        {% for afiliacion in afiliaciones %}
+            <tr>
+                <th>{{afiliacion.name}}</th>
+                <th>{{afiliacion.rol}}</th>
+                <th>{{afiliacion.since}}</th>
+                <th>{{afiliacion.until}}</th>
+                <th>{{afiliacion.value}}</th>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock tasas %}

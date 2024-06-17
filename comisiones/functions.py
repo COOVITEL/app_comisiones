@@ -1,4 +1,3 @@
-from users.models import File
 from .read_excel import readExcel
 from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial
 from users.models import Asesor, CooviahorroMonth, Court
@@ -23,18 +22,17 @@ def afiliaciones(name, current_file):
     ]
     numberAfiliaciones = len(setListAfiliaciones)
     tasasAfiliaciones = Afiliaciones.objects.all()
-    tasa = None
+    tasa = 0
 
     for tasas in tasasAfiliaciones:
         if numberAfiliaciones >= tasas.since and numberAfiliaciones <= tasas.until:
-            tasa = tasas
-            break
-    
+            tasa = tasas.value
+
     afiliaciones = {
         "afiliaciones": setListAfiliaciones,
         "numberAfiliaciones": numberAfiliaciones,
-        "tasas": int(tasa.value),
-        "pagoAfiliaciones": int(numberAfiliaciones) * int(tasa.value) if tasa else 0,
+        "tasas": int(tasa),
+        "pagoAfiliaciones": int(numberAfiliaciones) * int(tasa) if tasa else 0,
     }
     return afiliaciones
 
@@ -129,6 +127,10 @@ def cooviahorro(name, current_file, date):
     totalMonto = int(monto) - int(value)
 
     comision = math.ceil((totalMonto / int(comisionMonto)) * int(comisionValue))
+    if comision < 0:
+        comision = 0
+    if totalMonto < 0:
+        totalMonto = 0
     listCooviahorros = {
         'cooviahorros': setCooviahorros,
         'monto': totalMonto,
@@ -148,7 +150,9 @@ def cdats(name, current_file, date):
                              "PROMOTOR",
                              ["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_EFECTIVA", "T_NOMINAL", "RETENCION", "PROMOTOR"],
                              current_file)
-
+    comisionNuevo = 0
+    comisonRenovado = 0
+    comisionTotal = 0
     setListCdats = [cdat for cdat in cdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
 
     setCdats = [
@@ -240,7 +244,7 @@ def ahorroVista(name, current_file):
         }
         for d in ahorros]
     promedio = sum(int(value['PROMEDIO']) for value in setAhorros)
-    
+    comision = 0
     for ahorro in ahorrosVista:
         if promedio >= int(ahorro.valueMin.replace(".", "")) and promedio <= int(ahorro.valueMax.replace(".", "")):
             comision = int(round(promedio * (ahorro.porcentaje / 100), 0))
@@ -259,6 +263,7 @@ def crecimientoBase(name, current_file):
     asesor = Asesor.objects.get(name=name)
     setname = name.split(" ")
     setList = []
+    comision = 0
     for word in setname:
         setList.append(word.capitalize())
     newName = " ".join(setList)
@@ -281,8 +286,6 @@ def crecimientoBase(name, current_file):
     if str(asesor.rol) == "Director":
         if setCrecimiento[0]['PORCENTAJE'] > crecimientoBase.porcentaje:
             comision = int(crecimientoBase.value.replace(".", "")) * setCrecimiento[0]['EJECUTADO']
-    else:
-        comision = 0
     
     listCrecimiento = {
         'crecimientoBase': setCrecimiento,

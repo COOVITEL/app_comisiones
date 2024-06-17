@@ -1,71 +1,118 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial
-from .forms import AfiliacionesForm, ColocacionesForm, CooviahorroForm, CdatForm, CdatTasasForm, AhorroVistaForm, CrecimientoBaseSocialForm
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
+from .forms import AfiliacionesForm, ColocacionesForm, CooviahorroForm, CdatForm, CdatTasasForm, AhorroVistaForm, CrecimientoBaseSocialForm, CrecimientoCDATForm
 
 @login_required
 def controlTasas(request):
     """"""
-    list_afiliaciones = Afiliaciones.objects.all()
-    colocaciones = Colocaciones.objects.all()
-    cooviahorro = Cooviahorro.objects.all()
+    return render(request, 'control.html')
+
+@login_required
+def afiliacionesView(request):
+    afiliaciones = Afiliaciones.objects.all()
+    form = AfiliacionesForm()
+    if request.method == 'POST':
+        form = AfiliacionesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('afiliaciones')
+    return render(request, 'tasas/afiliaciones.html', {
+        'form': form,
+        'afiliaciones': afiliaciones
+    })
+
+@login_required
+def colocaciones(request):
+    col = Colocaciones.objects.all()
+    form = ColocacionesForm()
+    if request.method == 'POST':
+        form = ColocacionesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('colocaciones')
+    return render(request, 'tasas/colocaciones.html', {
+        'form': form,
+        'colocaciones': col
+    })
+
+@login_required
+def cooviahorro(request):
+    cooviahorros = Cooviahorro.objects.all()
+    form = ColocacionesForm()
+    if request.method == 'POST':
+        form = ColocacionesForm(request.POST)
+        if form.is_valid():
+            return redirect('cooviahorro')
+    return render(request, 'tasas/cooviahorro.html', {
+        'form': form,
+        'cooviahorros': cooviahorros
+    })
+
+@login_required
+def cdat(request):
     cdats = Cdat.objects.all()
-    cdatstasas = CdatTasas.objects.all()
+    form = CdatForm()
+    if request.method == 'POST':
+        form = CdatForm(request.POST)
+        if form.is_valid():
+            return redirect('cdats')
+    return render(request, 'tasas/cdats.html', {
+        'form': form,
+        'cdats': cdats
+    })
+
+@login_required
+def cdatTasas(request):
+    cdatsTasas = CdatTasas.objects.all()
+    form = CdatTasasForm()
+    if request.method == 'POST':
+        form = CdatTasasForm(request.POST)
+        if form.is_valid():
+            return redirect('cdatsTasas')
+    return render(request, 'tasas/cdatstasas.html', {
+        'form': form,
+        'cdatsTasas': cdatsTasas
+    })
+
+@login_required
+def ahorroVista(request):
     ahorros = AhorroVista.objects.all()
-    crecimeintoBase = CrecimientoBaseSocial.objects.all()
-    
-    formAfi = AfiliacionesForm()
-    formCol = ColocacionesForm()
-    formCoovi = CooviahorroForm()
-    formCdat = CdatForm()
-    formCdatTasas = CdatTasasForm()
-    formAhorro = AhorroVistaForm()
-    formCrecimientoBase = CrecimientoBaseSocialForm()
-    
-    if request.method == "POST":
-        formAfi = AfiliacionesForm(request.POST)
-        formCol = ColocacionesForm(request.POST)
-        formCoovi = CooviahorroForm(request.POST)
-        formCdat = CdatForm(request.POST)
-        formCdatTasas = CdatTasasForm(request.POST)
-        formAhorro = AhorroVistaForm(request.POST)
-        formCrecimientoBase = CrecimientoBaseSocialForm(request.POST)
-        if formAfi.is_valid():
-            formAfi.save()
-            return redirect('tasas')
-        if formCol.is_valid():
-            formCol.save()
-            return redirect('tasas')
-        if formCoovi.is_valid():
-            formCoovi.save()
-            return redirect('tasas')
-        if formCdat.is_valid():
-            formCdat.save()
-            return redirect('tasas')
-        if formCdatTasas.is_valid():
-            formCdatTasas.save()
-            return redirect('tasas')
-        if formAhorro.is_valid():
-            formAhorro.save()
-            return redirect('tasas')
-        if formCrecimientoBase.is_valid():
-            formCrecimientoBase.save()
-            return redirect('tasas')
+    form = AhorroVistaForm()
+    if request.method == 'POST':
+        form = AhorroVistaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ahorros')
+    return render(request, 'tasas/ahorrosVista.html',{
+        'form': form,
+        'ahorros': ahorros
+    })
 
-    return render(request, 'control.html',
-                  {'afiliaciones': list_afiliaciones,
-                    'col': colocaciones,
-                    'coovi': cooviahorro,
-                    'cdats': cdats,
-                    'cdatstasas': cdatstasas,
-                    'ahorros': ahorros,
-                    'crecimientoBase': crecimeintoBase,
-                    'formAfi': formAfi,
-                    'formCol': formCol,
-                    'formCoovi': formCoovi,
-                    'formCdat': formCdat,
-                    'formCdatTasas': formCdatTasas,
-                    'formAhorro': formAhorro,
-                    'formCrecimientoBase': formCrecimientoBase
-                    })
+@login_required
+def crecimientoBase(request):
+    crecimientoBase = CrecimientoBaseSocial.objects.all()
+    form = CrecimientoBaseSocialForm()
+    if request.method == 'POST':
+        form = CrecimientoBaseSocialForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crecimientoBase')
+    return render(request, 'tasas/crecimientoBase.html', {
+        'form': form,
+        'crecimientoBase': crecimientoBase
+    })
 
+@login_required
+def crecimientoCDAT(request):
+    crecimientoCdat = CrecimientoCDAT.objects.all()
+    form = CrecimientoCDATForm()
+    if request.method == 'POST':
+        form = CrecimientoCDATForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crecimientoCdat')
+    return render(request, 'tasas/crecimientoCdat.html',{
+        'form': form,
+        'crecimientoCdat': crecimientoCdat
+    })

@@ -6,16 +6,36 @@
     <h2>Control de Tasas y Valores de Comisiones por producto</h2>
 
     
-    {% comment %} {% include "tasas/afiliaciones.html" %} {% endcomment %}
+    <ul>
+        <li><a href="{% url "afiliaciones" %}">Afiliaciones</a></li>
+        <li><a href="{% url "colocaciones" %}">Colocaciones</a></li>
+        <li><a href="{% url "cooviahorro" %}">Cooviahorros</a></li>
+        <li><a href="{% url "cdats" %}">Cdats</a></li>
+        <li><a href="{% url "cdatsTasas" %}">Cdats Tasas Actuales</a></li>
+        <li><a href="{% url "ahorro" %}">Ahorro Vista</a></li>
+        <li><a href="{% url "crecimientoBase" %}">Crecimiento Base Social</a></li>
+        <li><a href="{% url "crecimientoCdat" %}">Crecimiento CDAT</a></li>
+    </ul>
 
-    {% comment %} {% include "tasas/colocaciones.html" %} {% endcomment %}
+    {% block tasas %}
+    
+    {% endblock tasas %}
 
-    {% comment %} {% include "tasas/cooviahorro.html" %} {% endcomment %}
-
-    {% comment %} {% include "tasas/cdats.html" %} {% endcomment %}
-
-    {% comment %} {% include "tasas/cdatstasas.html" %} {% endcomment %}
-
-    {% include "tasas/ahorrosVista.html" %}
+    <script>
+        function handleChange(idName) {
+            var inputElement = document.getElementById(idName);
+            inputElement.value = inputElement.value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+            var inputValue = inputElement.value.replace('.', '').split("").reverse(); // Reversa el valor para facilitar la inserción de puntos
+            var newValue = '';
+            for (var i = 0; i < inputValue.length; i++) {
+                if (i % 3 == 0 && i!= 0) { // Agrega un punto cada tres dígitos, excepto al inicio
+                    newValue += '.';
+                }
+                newValue += inputValue[i];
+            }
+            inputElement.value = newValue.split("").reverse().join(""); // Revierte el valor y lo establece en el input
+        }
+    
+    </script>
 
 {% endblock content %}

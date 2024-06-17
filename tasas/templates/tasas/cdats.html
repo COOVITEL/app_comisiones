@@ -1,28 +1,34 @@
-<table>
-    <tr>
-        <th>Cdats</th>
-        <th>Descripcion</th>
-        <th>Rol</th>
-        <th>Tipo</th>
-        <th>Valor Minimo</th>
-        <th>Valor Maximo</th>
-        <th>Valor por millon</th>
-    </tr>
-    {% for cdat in cdats %}
-        <tr>
-            <th>{{cdat.name}}</th>
-            <th>{{cdat.description}}</th>
-            <th>{{cdat.rol}}</th>
-            <th>{{cdat.type}}</th>
-            <th>{{cdat.valueMin}}</th>
-            <th>{{cdat.valueMax}}</th>
-            <th>{{cdat.value}}</th>
-        </tr>
-    {% endfor %}
-</table>
+{% extends "control.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ formCdat.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+{% load static %}
+
+{% block tasas %}
+    <table>
+        <tr>
+            <th>Cdats</th>
+            <th>Descripcion</th>
+            <th>Rol</th>
+            <th>Tipo</th>
+            <th>Valor Minimo</th>
+            <th>Valor Maximo</th>
+            <th>Valor por millon</th>
+        </tr>
+        {% for cdat in cdats %}
+            <tr>
+                <th>{{cdat.name}}</th>
+                <th>{{cdat.description}}</th>
+                <th>{{cdat.rol}}</th>
+                <th>{{cdat.type}}</th>
+                <th>{{cdat.valueMin}}</th>
+                <th>{{cdat.valueMax}}</th>
+                <th>{{cdat.value}}</th>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock tasas %}
