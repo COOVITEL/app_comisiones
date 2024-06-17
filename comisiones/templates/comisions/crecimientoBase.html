@@ -8,12 +8,15 @@
             <th>PPTP</th>
             <th>Porcentaje Acumulado</th>
         </tr>
+        {% for crecimiento in crecimientoBase.crecimientoBase %}
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <th>{{crecimiento.PROMOTOR}}</th>
+            <th>{{crecimiento.EJECUTADO}}</th>
+            <th>{{crecimiento.META}}</th>
+            <th>{{crecimiento.PORCENTAJE}}</th>
         </tr>
+    {% endfor %}
     </table>
-    <p>Valor total de Comision: $ <span id="values"></span></p>
+    <p>Valor total de Comision: $ <span id="values">{{crecimientoBase.comision}}</span></p>
 </div>
+

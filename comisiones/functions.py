@@ -256,12 +256,13 @@ def ahorroVista(name, current_file):
 
 def crecimientoBase(name, current_file):
     """"""
+    asesor = Asesor.objects.get(name=name)
     setname = name.split(" ")
     setList = []
     for word in setname:
         setList.append(word.capitalize())
     newName = " ".join(setList)
-    crecimientoBase = CrecimientoBaseSocial.objects.all()
+    crecimientoBase = CrecimientoBaseSocial.objects.all()[0]
     
     crecimiento = readExcel(newName,
                             "Afiliaciones Promotor",
@@ -269,9 +270,24 @@ def crecimientoBase(name, current_file):
                             ["Gestor", "EJEC", "PPTO", "% CUMP"],
                             current_file
                             )
-    print(crecimiento)
+    setCrecimiento = [
+        {
+            'PROMOTOR': d['Gestor'],
+            'EJECUTADO': d['EJEC'],
+            'META': d['PPTO'],
+            'PORCENTAJE': d['% CUMP'] * 100
+        }
+        for d in crecimiento]
+    if str(asesor.rol) == "Director":
+        if setCrecimiento[0]['PORCENTAJE'] > crecimientoBase.porcentaje:
+            comision = int(crecimientoBase.value.replace(".", "")) * setCrecimiento[0]['EJECUTADO']
+    else:
+        comision = 0
+    
     listCrecimiento = {
-        'crecimientoBase': 12
+        'crecimientoBase': setCrecimiento,
+        'comision': comision
     }
     
     return listCrecimiento
+

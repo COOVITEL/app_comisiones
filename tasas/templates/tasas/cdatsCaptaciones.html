@@ -1,0 +1,29 @@
+<h3>Cdats Captaciones</h3>
+<table>
+    <tr>
+        <th>Cdats</th>
+        <th>Descripcion</th>
+        <th>Rol</th>
+        <th>Tipo</th>
+        <th>Valor Minimo</th>
+        <th>Valor Maximo</th>
+        <th>Valor por millon</th>
+    </tr>
+    {% for cdat in cdatsCaptaciones %}
+        <tr>
+            <th>{{cdat.name}}</th>
+            <th>{{cdat.description}}</th>
+            <th>{{cdat.rol}}</th>
+            <th>{{cdat.type}}</th>
+            <th>{{cdat.valueMin}}</th>
+            <th>{{cdat.valueMax}}</th>
+            <th>{{cdat.value}}</th>
+        </tr>
+    {% endfor %}
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    {{ formCdatCaptaciones.as_p }}
+    <button type="submit">Guardar</button>
+</form>
