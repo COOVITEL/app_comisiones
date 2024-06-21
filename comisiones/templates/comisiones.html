@@ -20,6 +20,17 @@
         {% include "comisions/ahorroVista.html" %}
 
         {% include "comisions/crecimientoBase.html" %}
+
+
+        {% if checkMeta.director %}
+            {% if checkMeta.state %}
+                {% include "comisions/crecimientoCDAT.html" %}        
+            {% else %}
+                <p>{{checkMeta.message}}</p>
+                <p>{{checkMeta.porcentaje}}</p>
+            {% endif %}
+        {% endif %}
+
     </div>
 {% endblock %}
 

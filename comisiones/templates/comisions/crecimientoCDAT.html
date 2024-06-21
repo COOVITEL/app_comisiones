@@ -1,0 +1,33 @@
+<div class="table">
+    <h4>Crecimiento CDAT</h4>
+    
+    <p>{{checkMeta.message}}</p>
+    <p>{{checkMeta.porcentaje}}</p>
+    <table>
+    <tr>
+        <th>Codigo Interno</th>
+        <th>Nombre Nomina</th>
+        <th>Plazo</th>
+        <th>Valor Titulo</th>
+        <th>Tasa Efectiva</th>
+        <th>Monto Anterios</th>
+        <th>Fecha Titulo</th>
+    </tr>
+    {% for cdat in checkMeta.cdats %}
+        <tr>
+            <td>{{cdat.K_IDTERC}}</td>
+            <td>{{cdat.NOMBRE_TERCERO}}</td>
+            <td>{{cdat.Q_PLADIA}}</td>
+            <td id="values">{{cdat.V_TITULO}}</td>
+            <td>{{cdat.T_EFECTIVA}}</td>
+            <td id="values">{{cdat.M_ANTERIOR}}</td>
+            <td>{{cdat.F_TITULO}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <p>Tasa Promedio: {{checkMeta.tasaPromedio}}
+    <p>Monto Total: $ <span id="values">{{checkMeta.montoTotal}}</span>
+    <p>Valor total de Comision: $ <span id="values">{{checkMeta.comision}}</span>
+
+</div>
+
