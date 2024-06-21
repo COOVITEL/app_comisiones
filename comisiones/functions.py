@@ -303,7 +303,6 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro):
     for word in setname:
         setList.append(word.capitalize())
     newName = " ".join(setList)
-    print(newName)
     cdat = readExcel(newName,
                         "CDAT Promotor Abril",
                         "Gestor",
@@ -323,8 +322,7 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro):
                         fileAhorro
                         )
     print(cdat)
-    print(cooviahorro)
-    print(ahorroVista)
+    # ejecutados = cdat['EJEC'] + cooviahorro['EJEC'] + ahorroVista['EJEC']
     return {
         'hola': "hola"
     }
