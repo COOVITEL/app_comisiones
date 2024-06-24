@@ -1,6 +1,6 @@
 from .read_excel import readExcel
 from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
-from users.models import Asesor, CooviahorroMonth, Court
+from users.models import *
 import math
 
 def afiliaciones(name, current_file):
@@ -104,9 +104,7 @@ def cooviahorro(name, current_file, date):
     if not CooviahorroMonth.objects.filter(nameAsesor=name, year=year, month=month).exists():
         registerCoovi = CooviahorroMonth(nameAsesor=name, totalValue=monto, year=year, month=month, court=currentCourt)
         registerCoovi.save()
-    # else:
-    #     current = CooviahorroMonth.objects.get(nameAsesor=name, year=year, month=month)
-    #     monto = current.totalValue
+
 
     asesorHistory = CooviahorroMonth.objects.filter(nameAsesor=name)
     controlState = False
@@ -315,7 +313,6 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
     
     if "Director" in str(asesor.rol):
         status["director"] = True
-
     
     cdat = readExcel(newName,
                         "CDAT Promotor Abril",
@@ -335,15 +332,17 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
                         ["Gestor", "EJEC", "PPTO", "% CUMP"],
                         fileAhorro
                         )
+    
     if len(cdat) == 0 or len(cooviahorro) == 0 or len(ahorroVista) == 0:
         if "Director" in str(asesor.rol):
             status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)." 
-        return status
+    
     ejecutados = int(cdat[0]["EJEC"]) + int(cooviahorro[0]["EJEC"]) + int(ahorroVista[0]["EJEC"])
     meta = int(cdat[0]["PPTO"]) + int(cooviahorro[0]["PPTO"]) + int(ahorroVista[0]["PPTO"])
     porcentaje = round((ejecutados / meta) * 100, 2)
     
-    if porcentaje > 80 and status["director"] == True or porcentaje < 80 and str(asesor.rol) == "Director Capt":
+    
+    if status["director"] == True or porcentaje < 80 and str(asesor.rol) == "Director Capt":
         status["state"] = True
         status["message"] = f"Felicitaciones este mes cumplio con su meta mensual individual."
         status["porcentaje"] = f"Su porcentaje ejecutado fue: {porcentaje}"
@@ -356,7 +355,7 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
             asesorsCapt = Asesor.objects.all()
             asesorsCapt = [asesors for asesors in asesorsCapt if "Capt" in str(asesors.rol)]
             setListCdats = [dato for dato in cdats if dato.get('PROMOTOR') in [asesor.name for asesor in asesorsCapt]]
-            
+                            
             setCdatsDate = [cdat for cdat in setListCdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
             
         else:
@@ -366,7 +365,38 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
                 columns=["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_EFECTIVA", "T_NOMINAL", "RETENCION", "PROMOTOR", "SUBZONA", "SUC_PRODUCTO"],
                 archive=fileComisiones)
             setListCdats = cdats
+            
             setCdatsDate = [cdat for cdat in setListCdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
+
+        montoTotalCurrentMonth = sum(int(value['V_TITULO']) for value in setListCdats)
+        
+        if not CrecimientoCdatMonth.objects.filter(name=asesor.sucursal, year=date[1], month=date[0]).exists():
+            crecimiento = CrecimientoCdatMonth(name=asesor.sucursal,
+                                                value=int(montoTotalCurrentMonth),
+                                                year=date[1],
+                                                month=date[0])
+            crecimiento.save()
+        
+        registers = CrecimientoCdatMonth.objects.filter(name=asesor.sucursal)
+        controlRegisCdats = CountCrecimientoCDAT.objects.all()[0].value
+        valueMax = 0
+        control = 0
+        for regis in registers:
+            if control > 0:
+                control += 1
+                if regis.value > valueMax:
+                    valueMax = regis.value
+                if control >= controlRegisCdats:
+                    break
+            if regis.value == montoTotalCurrentMonth:
+                control += 1
+        crecimiento = montoTotalCurrentMonth - valueMax
+        
+        if crecimiento < 0:
+            crecimiento = 0
+            status["state"] = False
+            status["message"] = f"Este mes no presento crecimiento en monto de los CDATs en su sucursal"
+            status["porcentaje"] = f"Su porcentaje ejecutado fue: {porcentaje}"
 
         setCdats = [
             {
@@ -380,23 +410,31 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
             }
             for d in setCdatsDate]
 
-
-        tasaPromedio = round(sum(int(value['T_EFECTIVA']) for value in setCdatsDate) / len(setCdatsDate), 2)
+        tasas = [value.get('T_EFECTIVA') for value in setCdatsDate]
+        values = [value.get('V_TITULO') for value in setCdatsDate]
+        plazos = [value.get('Q_PLADIA') for value in setCdatsDate]
         montoTotal = sum(int(value['V_TITULO']) for value in setCdatsDate)
+        
+        tasaPromedio = round(sum(a*b for a, b in zip(values, tasas)) / montoTotal, 2)
+        plazoPromedio = round(sum(a*b for a, b in zip(values, plazos)) / montoTotal, 2)
+        
         status["tasaPromedio"] = tasaPromedio
-        status["montoTotal"] = int(montoTotal)
+        status["plazoPromedio"] = plazoPromedio
+        status["montoTotal"] = int(crecimiento)
         status["cdats"] = setCdats
         
         tasasCdats = CrecimientoCDAT.objects.all()
         comision = 0
         for tasas in tasasCdats:
-            if tasaPromedio >= tasas.tasaMin and tasaPromedio <= tasas.tasaMax:
+            if tasaPromedio >= float(tasas.tasaMin) and tasaPromedio <= float(tasas.tasaMax):
                 valorComision = tasas.comision
-        comision = (montoTotal / 1000000) * int(valorComision.replace(".", ""))
-        status["comision"] = int(comision) 
-        return status
-    status["state"] = False
-    status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)."
-    status["porcentaje"] = f"Su porcentaje ejecutado fue: {porcentaje}"
+                
+        comision = (crecimiento / 1000000) * (plazoPromedio / 360) * int(valorComision.replace(".", ""))
+        status["comision"] = int(comision)
+    if porcentaje < 80 and str(asesor.rol) != "Director Capt":
+        status["state"] = False
+        status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)."
+        status["porcentaje"] = f"Su porcentaje ejecutado fue: {porcentaje}"
+    
     return status
 

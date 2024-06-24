@@ -76,3 +76,23 @@ class Court(models.Model):
     def __str__(self):
         """"""
         return f"Numero de meses de corte: {self.value}"
+
+class CountCrecimientoCDAT(models.Model):
+    """"""
+    value = models.IntegerField()
+    
+    def __str__(self):
+        return f"Numero de registros de cdat para tener en cuenta, {self.value}"
+
+class CrecimientoCdatMonth(models.Model):
+    """"""
+    name = models.ForeignKey(Sucursale, on_delete=models.CASCADE)
+    value = models.IntegerField()
+    year = models.IntegerField()
+    month = models.IntegerField()
+    
+    def __str__(self):
+        return f"Crecimiento CDAT en {self.name}, valor: {self.value} en el mes de {self.month} del año {self.year}"
+    
+    class Meta:
+        ordering = ['-year', '-month']
