@@ -95,3 +95,16 @@ class CrecimientoCDAT(models.Model):
     
     def __str__(self):
         return f"Comision Crecimiento CDAT: {self.comision} entre tasas del {self.tasaMin} - {self.tasaMax}"
+
+class CrecimientoCooviahorro(models.Model):
+    """"""
+    description = models.CharField(max_length=500)
+    value = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f"Comision $ {self.value} pagada por $ 1.000.000 de crecimiento en Cooviahorro a los directores de canal o sucursal"
+
+# class CrecimientoAhorroVista(models.Model):
+#     """"""
+#     description = models.CharField(max_length=500)
+    

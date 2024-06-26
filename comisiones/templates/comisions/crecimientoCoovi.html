@@ -1,0 +1,32 @@
+<div class="table">
+    <h4>Crecimiento Cooviahorros</h4>    
+    <table>
+    <tr>
+        <th>Fecha</th>
+        {% for coovi in checkMeta.crecimientosCoovi %}
+        <th>{{coovi.month}} - {{coovi.year}}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>Monto Cooviahorros</td>
+        {% for coovi in checkMeta.crecimientosCoovi %}
+        <td>$ <span id="values">{{coovi.value}}</span></td>
+        {% endfor %}
+    </tr>
+    </table>
+    <p>Crecimiento Cooviahorro: $ <span id="values">{{checkMeta.crecimientoCoovi}}</span></p>
+    <p>Valor total de Comision: $ <span id="values">{{checkMeta.comisionCoovi}}</span>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var montos = document.querySelectorAll('#values');
+        montos.forEach(function(monto) {
+            if (monto.textContent!== '') {
+                var num = parseFloat(monto.textContent.replace(/,/g, ''));
+                monto.textContent = num.toLocaleString();
+            }
+        });
+    });
+</script>

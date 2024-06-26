@@ -18,16 +18,19 @@
         {% comment %} {% include "comisions/cdats.html" %} {% endcomment %}
 
         {% comment %} {% include "comisions/ahorroVista.html" %} {% endcomment %}
-
-        {% comment %} {% include "comisions/crecimientoBase.html" %} {% endcomment %}
-
-
+          
         {% if checkMeta.director %}
             {% if checkMeta.state %}
-                {% include "comisions/crecimientoCDAT.html" %}        
-            {% else %}
-                <p>{{checkMeta.message}}</p>
                 <p>{{checkMeta.porcentaje}}</p>
+                <p>{{checkMeta.message}}</p>
+                {% comment %} {% include "comisions/crecimientoBase.html" %} {% endcomment %}
+                {% if checkMeta.stateCdat %}
+                    {% include "comisions/crecimientoCDAT.html" %}        
+                {% endif %}
+                {% include "comisions/crecimientoCoovi.html" %}
+            {% else %}
+                <p>{{checkMeta.porcentaje}}</p>
+                <p>{{checkMeta.message}}</p>
             {% endif %}
         {% endif %}
 

@@ -1,5 +1,5 @@
 from .read_excel import readExcel
-from tasas.models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
+from tasas.models import *
 from users.models import *
 import math
 
@@ -195,6 +195,7 @@ def cdats(name, current_file, date):
             if (valorCdat >= valorminTasa and valorCdat <= valormaxTasa) and (time >= timeMin and time <= timeMax):
                 cdats['T_REF'] = tasas.tasa
                 cdats['F_TASA'] = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3)
+                tasaRef = tasas.tasa
                 cdats['F_TP'] = round(cdats['F_TASA'] * cdats['FACTOR_PLAZO'], 2)
                 var = int(cdats['M_ANTERIOR']) / 1000000
                 vaar = float(var) * int(valueReno)
@@ -294,7 +295,7 @@ def crecimientoBase(name, current_file):
     return listCrecimiento
 
 
-def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
+def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileAhorroVista):
     asesor = Asesor.objects.get(name=name)
     setname = name.split(" ")
     setList = []
@@ -344,18 +345,35 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
     
     if status["director"] == True or porcentaje < 80 and str(asesor.rol) == "Director Capt":
         status["state"] = True
+        status["stateCdat"] = True
         status["message"] = f"Felicitaciones este mes cumplio con su meta mensual individual."
         status["porcentaje"] = f"Su porcentaje ejecutado fue: {porcentaje}"
 
+        # Crecimiento Ahorro Vista
+        promedioAhorroVista = readExcel(str(asesor.sucursal),
+                    "Promedio",
+                    "SUC PRODUCTO",
+                    ["CEDULA ASOCIADO", "CUENTA ASOCIADO", "Promedio 30 días", "PROMOTOR", "SUC PRODUCTO", "Total"],
+                    fileAhorroVista)
+
+        # Crecimiento Cdats
         if str(asesor.rol) == "Director Capt":
             cdats = readExcel(name=str(asesor.subzona),
                     file="Cdat",
                     columns=["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_EFECTIVA", "T_NOMINAL", "RETENCION", "PROMOTOR", "SUBZONA", "SUC_PRODUCTO"],
                     archive=fileComisiones)
+            cooviahorros = readExcel(name=str(asesor.sucursal),
+                                    file="Cooviahorro",
+                                    columns=["AANUMNIT", "K_NUMDOC", "N_TIPODR", "SALDO", "PROMOTOR", "SUC_PRODUCTO"],                    
+                                    archive=fileComisiones)
+            
             asesorsCapt = Asesor.objects.all()
             asesorsCapt = [asesors for asesors in asesorsCapt if "Capt" in str(asesors.rol)]
-            setListCdats = [dato for dato in cdats if dato.get('PROMOTOR') in [asesor.name for asesor in asesorsCapt]]
-                            
+            
+            setListCdats = [data for data in cdats if data.get('PROMOTOR') in [asesor.name for asesor in asesorsCapt]]
+            setListCooviahorro = [data for data in cooviahorros if data.get('PROMOTOR') in [asesor.name for asesor in asesorsCapt]]
+            setPromedioAhorroVista = [data for data in promedioAhorroVista if data.get('PROMOTOR') in [asesor.name for asesor in asesorsCapt]]
+                                        
             setCdatsDate = [cdat for cdat in setListCdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
             
         else:
@@ -364,8 +382,14 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
                 asesor="SUC_PRODUCTO",
                 columns=["K_IDTERC", "NOMBRE_TERCERO", "V_TITULO", "F_TITULO", "Q_PLADIA", "M_ANTERIOR", "T_EFECTIVA", "T_NOMINAL", "RETENCION", "PROMOTOR", "SUBZONA", "SUC_PRODUCTO"],
                 archive=fileComisiones)
-            setListCdats = cdats
+            cooviahorros = readExcel(name=str(asesor.sucursal),
+                    file="Cooviahorro",
+                    asesor="SUC_PRODUCTO",
+                    columns=["AANUMNIT", "K_NUMDOC", "N_TIPODR", "SALDO", "PROMOTOR", "SUC_PRODUCTO"],
+                    archive=fileComisiones)
             
+            setListCooviahorro = cooviahorros
+            setListCdats = cdats
             setCdatsDate = [cdat for cdat in setListCdats if str(str(cdat['F_TITULO']).split(" ")[0])[:-3] == currentDate]
 
         montoTotalCurrentMonth = sum(int(value['V_TITULO']) for value in setListCdats)
@@ -394,7 +418,7 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
         
         if crecimiento < 0:
             crecimiento = 0
-            status["state"] = False
+            status["stateCdat"] = False
             status["message"] = f"Este mes no presento crecimiento en monto de los CDATs en su sucursal"
             status["porcentaje"] = f"Su porcentaje ejecutado fue: {porcentaje}"
 
@@ -428,9 +452,61 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date):
         for tasas in tasasCdats:
             if tasaPromedio >= float(tasas.tasaMin) and tasaPromedio <= float(tasas.tasaMax):
                 valorComision = tasas.comision
-                
+        
         comision = (crecimiento / 1000000) * (plazoPromedio / 360) * int(valorComision.replace(".", ""))
         status["comision"] = int(comision)
+        
+        # Crecimiento Cooviahorro  
+        setCooviahorros = [
+            {**d,
+                'SALDO': str(d['SALDO']).split(".")[0] if '.' in str(d['SALDO']) else '0',
+            }
+            for d in setListCooviahorro]
+        
+        totalCoovi = sum(int(value['SALDO']) for value in setCooviahorros)
+        if not CrecimientoCooviahorroMonth.objects.filter(name=asesor.sucursal, year=date[1], month=date[0]).exists():
+            crecimientoCoovi = CrecimientoCooviahorroMonth(name=asesor.sucursal,
+                                                value=int(totalCoovi),
+                                                year=date[1],
+                                                month=date[0])
+            crecimientoCoovi.save()
+        controlCooviahorros = CountCrecimientoCooviahorro.objects.all()[0].value
+        listCrecimientoCoovi = CrecimientoCooviahorroMonth.objects.filter(name=asesor.sucursal)
+        listCrecimientoCooviValues = [date.value for date in listCrecimientoCoovi]
+        valueMaxCoovi = 0
+        control = 0
+        for cooviValue in listCrecimientoCooviValues:
+            if control <= controlCooviahorros and control > 0:
+                if cooviValue > valueMaxCoovi:
+                    valueMaxCoovi = cooviValue
+                control += 1
+            if cooviValue == totalCoovi:
+                control = 1
+
+        crecimientoCoovi = totalCoovi - valueMaxCoovi
+        if crecimientoCoovi < 0:
+            crecimientoCoovi = 0
+        
+        
+        comisionValueCoovi = CrecimientoCooviahorro.objects.all()[0].value.replace(".", "")
+        comisicionCoovi = (int(crecimientoCoovi) / 1000000) * int(comisionValueCoovi)
+        status["crecimientosCoovi"] = listCrecimientoCoovi
+        status["crecimientoCoovi"] = crecimientoCoovi
+        status["comisionCoovi"] = int(comisicionCoovi)
+        
+        #Ahorro Vista
+        setPromedioAhorroVista = [
+            {**d,
+                'promedio': str(d['Promedio 30 días']).split(".")[0] if '.' in str(d['Promedio 30 días']) else '0',
+                'total': str(d['Total']).split(".")[0] if '.' in str(d['Total']) else '0',
+            }
+            for d in promedioAhorroVista]
+        print(len(setPromedioAhorroVista))
+        # setPromedioAhorroVista = [d for d in setPromedioAhorroVista if d['PROMOTOR'] != "DEFAULT"]
+        print(len(setPromedioAhorroVista))
+        promedio = sum(int(value['promedio']) for value in setPromedioAhorroVista)
+        print(promedio)
+        
     if porcentaje < 80 and str(asesor.rol) != "Director Capt":
         status["state"] = False
         status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)."

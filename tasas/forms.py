@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
+from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT, CrecimientoCooviahorro
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -73,51 +73,61 @@ class CdatTasasForm(forms.ModelForm):
     class Meta():
         model = CdatTasas
         fields = ['plazoMin', 'plazoMax', 'valueMin', 'valueMax', 'tasa']
-        labels= [
-            {'plazoMin': 'Plazo minimo en dias'},
-            {'plazoMax': 'Plazo maximo en dias'},
-            {'valueMin': 'Valor minimo'},
-            {'valueMin': 'Plazo minimo'},
-            {'tasa': 'Tasa'}
-            
-        ]
+        labels= {
+            'plazoMin': 'Plazo minimo en dias',
+            'plazoMax': 'Plazo maximo en dias',
+            'valueMin': 'Valor minimo',
+            'valueMax': 'Valor maximo',
+            'tasa': 'Tasa'
+        }            
 
 class AhorroVistaForm(forms.ModelForm):
     """"""
-    valueMin = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMin')"}))
-    valueMax = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMax')"}))
+    valueMin = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMin')"}),
+                               label="Valor minimo")
+    valueMax = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMax')"}),
+                               label="Valor maximo")
 
     class Meta():
         model = AhorroVista
         fields = ['valueMin', 'valueMax', 'porcentaje']
-        labels = [
-            {'valueMin': 'Valor minimo'},
-            {'valueMax': 'Valor maximo'},
-            {'porcentaje': 'Porcentaje'}
-        ]
+        labels = {
+            'porcentaje': 'Porcentaje'
+        }
 
 class CrecimientoBaseSocialForm(forms.ModelForm):
     """"""
-    value = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_value')"}))
+    value = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_value')"}),
+                            label="Valor por afiliación")
     
     class Meta():
         model = CrecimientoBaseSocial
         fields = ['porcentaje', 'value']
-        labels = [
-            {'porcentaje': 'Porcentaje Minimo para aplicar'},
-            {'value': 'Valor por afiliacion'},
-        ]
+        labels = {
+            'porcentaje': 'Porcentaje Minimo para aplicar',
+        }
 
 class CrecimientoCDATForm(forms.ModelForm):
     """"""
-    medida = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_medida')"}))
-    comision = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_comision')"}))
+    medida = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_medida')"}),
+                             label="Valor de medida de comisión")
+    comision = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_comision')"}),
+                               label="Valor de comision")
     class Meta:
         model = CrecimientoCDAT
         fields = ['medida', 'tasaMin', 'tasaMax', 'comision']
-        labels = [
-            {'medida': 'Valor de medida de comisión'},
-            {'tasaMin': 'Tasa minima promedio'},
-            {'valueMax': 'Tasa maxima promedio'},
-            {'comision': 'Valor de comision'}
-        ]
+        labels = {
+            'tasaMin': 'Tasa minima promedio',
+            'tasaMax': 'Tasa maxima promedio',
+        }
+
+class CrecimientoCooviahorroForm(forms.ModelForm):
+    """"""
+    value = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_value')"}),
+                            label="Valor a pagar por millon $1.000.000")
+    class Meta:
+        model = CrecimientoCooviahorro
+        fields = ['description', 'value']
+        labels = {
+            'description': 'Descripcion',
+            }

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
-from .forms import AfiliacionesForm, ColocacionesForm, CooviahorroForm, CdatForm, CdatTasasForm, AhorroVistaForm, CrecimientoBaseSocialForm, CrecimientoCDATForm
+from .models import *
+from .forms import *
 
 @login_required
 def controlTasas(request):
@@ -115,4 +115,18 @@ def crecimientoCDAT(request):
     return render(request, 'tasas/crecimientoCdat.html',{
         'form': form,
         'crecimientoCdat': crecimientoCdat
+    })
+
+@login_required
+def crecimientoCoovi(request):
+    crecimientoCoovi = CrecimientoCooviahorro.objects.all()
+    form = CrecimientoCooviahorroForm()
+    if request.method == 'POST':
+        form = CrecimientoCooviahorroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crecimientoCooviahorro')
+    return render(request, 'tasas/crecimientoCooviahorro.html', {
+        'form': form,
+        'crecimientoCoovi': crecimientoCoovi
     })

@@ -31,7 +31,7 @@ class Asesor(models.Model):
         return f"{self.name} - {self.rol}"
 
     class Meta:
-        ordering = ['id']
+        ordering = ['name']
 
 class File(models.Model):
     """"""
@@ -96,3 +96,23 @@ class CrecimientoCdatMonth(models.Model):
     
     class Meta:
         ordering = ['-year', '-month']
+
+class CrecimientoCooviahorroMonth(models.Model):
+    """"""
+    name = models.ForeignKey(Sucursale, on_delete=models.CASCADE)
+    value = models.IntegerField()
+    year = models.IntegerField()
+    month = models.IntegerField()
+    
+    def __str__(self):
+        return f"Crecimiento de Cooviahorro de {self.value} el {self.year}/{self.month}"
+    
+    class Meta:
+        ordering = ['-year', '-month']
+
+class CountCrecimientoCooviahorro(models.Model):
+    """"""
+    value = models.IntegerField()
+    
+    def __str__(self):
+        return f"Numero de registros de crecimiento de cooviahorros para tener en cuenta, {self.value}"

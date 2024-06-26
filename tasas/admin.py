@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT
+from .models import *
 
 @admin.register(Afiliaciones)
 class AfiliacionesAdmin(admin.ModelAdmin):
@@ -32,3 +32,7 @@ class CrecimientoBaseSocialAdmin(admin.ModelAdmin):
 @admin.register(CrecimientoCDAT)
 class CrecimientoCDATAdmin(admin.ModelAdmin):
     list_display = ['medida', 'tasaMin', 'tasaMax', 'comision']
+
+@admin.register(CrecimientoCooviahorro)
+class CrecimientoCooviahorroAdmin(admin.ModelAdmin):
+    list_display = ['description', 'value']
