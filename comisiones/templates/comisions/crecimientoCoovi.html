@@ -19,14 +19,3 @@
 
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var montos = document.querySelectorAll('#values');
-        montos.forEach(function(monto) {
-            if (monto.textContent!== '') {
-                var num = parseFloat(monto.textContent.replace(/,/g, ''));
-                monto.textContent = num.toLocaleString();
-            }
-        });
-    });
-</script>

@@ -3,6 +3,24 @@ from tasas.models import *
 from users.models import *
 import math
 
+DAYS_29 = ["02", ]
+DAYS_30 = ["04", "06", "09", "11"]
+DAYS_31 = ["01", "03", "05", "07", "08", "10", "12"]
+MONTHS = {
+    '01': 'Enero',
+    '02': 'Febrero',
+    '03': 'Marzo',
+    '04': 'Abril',
+    '05': 'Mayo',
+    '06': 'Junio',
+    '07': 'Julio',
+    '08': 'Agosto',
+    '09': 'Septiembre',
+    '10': 'Octubre',
+    '11': 'Noviembre',
+    '12': 'Diciembre'
+}
+
 def afiliaciones(name, current_file):
     """
     """
@@ -155,10 +173,10 @@ def cdats(name, current_file, date):
 
     setCdats = [
         {**d,
-            'V_TITULO': str(d['V_TITULO']).split(".")[0],
-            'M_ANTERIOR': str(d['M_ANTERIOR']).split(".")[0],
-            'Q_PLADIA': str(d['Q_PLADIA']).split(".")[0],
-            'V_NUEVO': int(str(d['V_TITULO']).split(".")[0]) - int(str(d['M_ANTERIOR']).split(".")[0]),
+            'V_TITULO': str(d['V_TITULO']).split(".")[0] if '.' in str(d['V_TITULO']) else "0",
+            'M_ANTERIOR': str(d['M_ANTERIOR']).split(".")[0] if '.' in str(d['M_ANTERIOR']) else "0",
+            'Q_PLADIA': str(d['Q_PLADIA']).split(".")[0] if '.' in str(d['Q_PLADIA']) else "0",
+            'V_NUEVO': int(str(d['V_TITULO']).split(".")[0] if '.' in str(d['V_TITULO']) else "0") - int(str(d['M_ANTERIOR']).split(".")[0] if '.' in str(d['M_ANTERIOR']) else "0"),
             'FACTOR_PLAZO': round(d['Q_PLADIA'] / 360, 2),
             'T_NOMINAL': round(d['T_NOMINAL'], 3),
         }
@@ -195,7 +213,6 @@ def cdats(name, current_file, date):
             if (valorCdat >= valorminTasa and valorCdat <= valormaxTasa) and (time >= timeMin and time <= timeMax):
                 cdats['T_REF'] = tasas.tasa
                 cdats['F_TASA'] = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3)
-                tasaRef = tasas.tasa
                 cdats['F_TP'] = round(cdats['F_TASA'] * cdats['FACTOR_PLAZO'], 2)
                 var = int(cdats['M_ANTERIOR']) / 1000000
                 vaar = float(var) * int(valueReno)
@@ -227,20 +244,27 @@ def cdats(name, current_file, date):
     return listCdats
 
 
-def ahorroVista(name, current_file):
+def ahorroVista(name, current_file, month):
     """"""
     ahorrosVista = AhorroVista.objects.all()
-    
+    if str(month) in DAYS_29:
+        days = 29
+    elif str(month) in DAYS_30:
+        days = 30
+    elif str(month) in DAYS_31:
+        days = 31
+    else:
+        days = 28
     ahorros = readExcel(name,
-                        "Promedio",
+                        "Promedio AhorroVista",
                         "PROMOTOR",
-                        ["CEDULA ASOCIADO", "CUENTA ASOCIADO", "Promedio 30 días", "PROMOTOR"],
+                        ["CEDULA ASOCIADO", "CUENTA ASOCIADO", f"Promedio {days} días", "PROMOTOR"],
                         current_file)
     setAhorros = [
         {
             'CEDULA': d['CEDULA ASOCIADO'],
             'CUENTA': d['CUENTA ASOCIADO'],
-            'PROMEDIO': int(d['Promedio 30 días'])
+            'PROMEDIO': int(d[f"Promedio {days} días"])
         }
         for d in ahorros]
     promedio = sum(int(value['PROMEDIO']) for value in setAhorros)
@@ -258,7 +282,7 @@ def ahorroVista(name, current_file):
     return listAhorros
 
 
-def crecimientoBase(name, current_file):
+def crecimientoBase(name, current_file, month):
     """"""
     asesor = Asesor.objects.get(name=name)
     setname = name.split(" ")
@@ -268,9 +292,9 @@ def crecimientoBase(name, current_file):
         setList.append(word.capitalize())
     newName = " ".join(setList)
     crecimientoBase = CrecimientoBaseSocial.objects.all()[0]
-    
+    nameMonth = MONTHS[month]
     crecimiento = readExcel(newName,
-                            "Afiliaciones Promotor",
+                            f"Afiliaciones Promotor {nameMonth}",
                             "Gestor",
                             ["Gestor", "EJEC", "PPTO", "% CUMP"],
                             current_file
@@ -301,6 +325,15 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
     setList = []
     date = str(date).split("-")
     currentDate = f"{date[1]}-{date[0]}"
+    nameMonth = MONTHS[date[0]]
+    if str(date[0]) in DAYS_29:
+        days = 29
+    elif str(date[0]) in DAYS_30:
+        days = 30
+    elif str(date[0]) in DAYS_31:
+        days = 31
+    else:
+        days = 28
     for word in setname:
         setList.append(word.capitalize())
     newName = " ".join(setList)
@@ -316,19 +349,19 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
         status["director"] = True
     
     cdat = readExcel(newName,
-                        "CDAT Promotor Abril",
+                        f"CDAT Promotor {nameMonth}",
                         "Gestor",
                         ["Gestor", "EJEC", "PPTO", "% CUMP"],
                         fileCDAT
                         )
     cooviahorro = readExcel(newName,
-                        "Cooviahorro Promotor Abril",
+                        f"Cooviahorro Promotor {nameMonth}",
                         "Gestor",
                         ["Gestor", "EJEC", "PPTO", "% CUMP"],
                         fileCoovi
                         )
     ahorroVista = readExcel(newName,
-                        "Ahorro Vista Promotor Abril",
+                        f"Ahorro Vista Promotor {nameMonth}",
                         "Gestor",
                         ["Gestor", "EJEC", "PPTO", "% CUMP"],
                         fileAhorro
@@ -351,9 +384,9 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
 
         # Crecimiento Ahorro Vista
         promedioAhorroVista = readExcel(str(asesor.sucursal),
-                    "Promedio",
-                    "SUC PRODUCTO",
-                    ["CEDULA ASOCIADO", "CUENTA ASOCIADO", "Promedio 30 días", "PROMOTOR", "SUC PRODUCTO", "Total"],
+                    "Promedio AhorroVista",
+                    "SUCURSAL_PRODUCTO",
+                    ["CEDULA ASOCIADO", "CUENTA ASOCIADO", f"Promedio {days} días", "PROMOTOR", "SUCURSAL_PRODUCTO", "Total"],
                     fileAhorroVista)
 
         # Crecimiento Cdats
@@ -497,15 +530,15 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
         #Ahorro Vista
         setPromedioAhorroVista = [
             {**d,
-                'promedio': str(d['Promedio 30 días']).split(".")[0] if '.' in str(d['Promedio 30 días']) else '0',
+                'promedio': str(d[f'Promedio {days} días']).split(".")[0] if '.' in str(d[f'Promedio {days} días']) else '0',
                 'total': str(d['Total']).split(".")[0] if '.' in str(d['Total']) else '0',
             }
             for d in promedioAhorroVista]
-        print(len(setPromedioAhorroVista))
+        # print(len(setPromedioAhorroVista))
         # setPromedioAhorroVista = [d for d in setPromedioAhorroVista if d['PROMOTOR'] != "DEFAULT"]
-        print(len(setPromedioAhorroVista))
+        # print(len(setPromedioAhorroVista))
         promedio = sum(int(value['promedio']) for value in setPromedioAhorroVista)
-        print(promedio)
+        # print(promedio)
         
     if porcentaje < 80 and str(asesor.rol) != "Director Capt":
         status["state"] = False
