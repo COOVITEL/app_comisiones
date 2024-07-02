@@ -11,10 +11,10 @@
         <th>Monto Nuevo</th>
         <th>Fecha Titulo</th>
         <th>Tasa Efectiva</th>
-        <th>Tasa Nominal</th>
         <th>Tasa Ref</th>
-        <th>Factor Plazo</th>
+        {% comment %} <th>Tasa Nominal</th> {% endcomment %}
         <th>Factor Tasa</th>
+        <th>Factor Plazo</th>
         <th>Factor Tasa y Plazo</th>
         <th>Comision Renovacion</th>
         <th>Comision Nuevo</th>
@@ -30,10 +30,10 @@
             <td id="values">{{cdat.V_NUEVO}}</td>
             <td>{{cdat.F_TITULO}}</td>
             <td>{{cdat.T_EFECTIVA}}</td>
-            <td>{{cdat.T_NOMINAL}}</td>
             <td>{{cdat.T_REF}}</td>
-            <td>{{cdat.FACTOR_PLAZO}}</td>
+            {% comment %} <td>{{cdat.T_NOMINAL}}</td> {% endcomment %}
             <td>{{cdat.F_TASA}}</td>
+            <td>{{cdat.FACTOR_PLAZO}}</td>
             <td>{{cdat.F_TP}}</td>
             <td>{{cdat.V_RENO}}</td>
             <td>{{cdat.V_NUEV}}</td>

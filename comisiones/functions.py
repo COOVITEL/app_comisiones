@@ -139,7 +139,6 @@ def cooviahorro(name, current_file, date):
                 value = int(historyDate.totalValue)
             if controlPosition > int(corte):
                 break
-    
     totalMonto = int(monto) - int(value)
 
     comision = math.ceil((totalMonto / int(comisionMonto)) * int(comisionValue))
@@ -187,7 +186,7 @@ def cdats(name, current_file, date):
     
     valuesCdats = Cdat.objects.all()
     
-    if "Captaciones" in str(asesor.rol):
+    if "Capt" in str(asesor.rol):
         setValuesCdats = [values for values in valuesCdats if "Captaciones" in str(values.rol)]
     else:
         setValuesCdats = [values for values in valuesCdats if "Captaciones" not in str(values.rol)]
@@ -212,7 +211,21 @@ def cdats(name, current_file, date):
             timeMax = int(tasas.plazoMax)
             if (valorCdat >= valorminTasa and valorCdat <= valormaxTasa) and (time >= timeMin and time <= timeMax):
                 cdats['T_REF'] = tasas.tasa
-                cdats['F_TASA'] = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3)
+                diferencia = round(abs(cdats['T_EFECTIVA'] - tasas.tasa), 2)
+                if diferencia >= 0.5:
+                    factorTasa = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3) + 0.5
+                else:
+                    if cdats["T_EFECTIVA"] > tasas.tasa:
+                        factorTasa = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3) + diferencia 
+                    else:
+                        factorTasa = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3) 
+                cdats['F_TASA'] = factorTasa
+                if cdats['F_TASA'] > 2:
+                    cdats['F_TASA'] = 2.0
+                if cdats['F_TASA'] < 0:
+                    cdats['F_TASA'] = 0
+                if cdats['FACTOR_PLAZO'] > 2.0:
+                    cdats['FACTOR_PLAZO'] = 2.0
                 cdats['F_TP'] = round(cdats['F_TASA'] * cdats['FACTOR_PLAZO'], 2)
                 var = int(cdats['M_ANTERIOR']) / 1000000
                 vaar = float(var) * int(valueReno)
@@ -227,6 +240,7 @@ def cdats(name, current_file, date):
                 cdats['V_RENO'] = vReno
                 cdats['V_NUEV'] = vNew
                 continue
+
     
     comisionNuevo = sum(int(value['V_RENO']) for value in setCdats)
     comisonRenovado = sum(int(value['V_NUEV']) for value in setCdats)
