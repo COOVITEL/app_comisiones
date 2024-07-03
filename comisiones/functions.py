@@ -219,7 +219,7 @@ def cdats(name, current_file, date):
                         factorTasa = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3) + diferencia 
                     else:
                         factorTasa = round(1 - (cdats['T_EFECTIVA'] - tasas.tasa), 3) 
-                cdats['F_TASA'] = factorTasa
+                cdats['F_TASA'] = round(factorTasa, 3)
                 if cdats['F_TASA'] > 2:
                     cdats['F_TASA'] = 2.0
                 if cdats['F_TASA'] < 0:
@@ -381,13 +381,22 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
                         fileAhorro
                         )
     
+    
     if len(cdat) == 0 or len(cooviahorro) == 0 or len(ahorroVista) == 0:
+        porcentaje = 0
         if "Director" in str(asesor.rol):
             status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)." 
-    
-    ejecutados = int(cdat[0]["EJEC"]) + int(cooviahorro[0]["EJEC"]) + int(ahorroVista[0]["EJEC"])
-    meta = int(cdat[0]["PPTO"]) + int(cooviahorro[0]["PPTO"]) + int(ahorroVista[0]["PPTO"])
-    porcentaje = round((ejecutados / meta) * 100, 2)
+    else:
+        ejecutadosCdat = int(cdat[0]["EJEC"]) if cdat[0]["EJEC"] else 0
+        ejecutadosCoovi = int(cooviahorro[0]["EJEC"]) if cooviahorro[0]["EJEC"] else 0
+        ejecutadosAhorro = int(ahorroVista[0]["EJEC"]) if ahorroVista[0]["EJEC"] else 0
+        ejecutados = ejecutadosCdat + ejecutadosCoovi + ejecutadosAhorro
+        
+        metaCdat = int(cdat[0]["PPTO"]) if cdat[0]["PPTO"] else 0
+        metaCoovi = int(cooviahorro[0]["PPTO"]) if cooviahorro[0]["PPTO"] else 0
+        metaAhorro = int(ahorroVista[0]["PPTO"]) if ahorroVista[0]["PPTO"] else 0
+        meta = metaCdat + metaCoovi+ metaAhorro
+        porcentaje = round((ejecutados / meta) * 100, 2)
     
     
     if status["director"] == True or porcentaje < 80 and str(asesor.rol) == "Director Capt":
