@@ -130,3 +130,17 @@ def crecimientoCoovi(request):
         'form': form,
         'crecimientoCoovi': crecimientoCoovi
     })
+
+@login_required
+def crecimientoAhorroVista(request):
+    crecimientoAhorro = CrecimientoAhorroVista.objects.all()
+    form = CrecimientoAhorroVistaForm()
+    if request.method == 'POST':
+        form = CrecimientoAhorroVistaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crecimientoAhorro')
+    return render(request, 'tasas/crecimientoAhorroVista.html', {
+        'form': form,
+        'crecimientoAhorro': crecimientoAhorro
+    })

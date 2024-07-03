@@ -1,0 +1,30 @@
+{% extends "control.html" %}
+
+{% load static %}
+
+{% block tasas %}
+    <h2>Tasas y comisiones de Crecimiento de Ahorro Vista</h2>
+    <table>
+        <tr>
+            <th>Descripcion</th>
+            <th>Saldo minimo</th>
+            <th>Saldo maximo</th>
+            <th>Porcentaje de comision</th>
+        </tr>
+        {% for crecimiento in crecimientoAhorro %}
+            <tr>
+                <th>{{crecimiento.description}}</th>
+                <th>{{crecimiento.valueMin}}</th>
+                <th>{{crecimiento.valueMax}}</th>
+                <th>{{crecimiento.porcentaje}}</th>
+            </tr>
+        {% endfor %}
+    </table> 
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+
+{% endblock tasas %}

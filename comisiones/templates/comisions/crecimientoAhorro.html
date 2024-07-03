@@ -1,0 +1,26 @@
+<div class="table">
+    <h4>Crecimiento Ahorro Vista</h4>    
+    <table>
+    <tr>
+        <th>Cedula Asociado</th>
+        <th>Cuenta</th>
+        <th>Promedio</th>
+        <th>Promotor</th>
+        <th>Total</th>
+    </tr>
+    {% for ahorro in checkMeta.crecimientiAhorroVista %}
+        <tr>
+            <td>{{ahorro.cedula}}</td>
+            <td>{{ahorro.cuenta}}</td>
+            <td>{{ahorro.promedio}}</td>
+            <td>{{ahorro.PROMOTOR}}</td>
+            <td>{{ahorro.total}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <p>Promedio: $ <span id="values">{{checkMeta.promedioAhorroVista}}</span></p>
+    <p>Porcentaje Comision: {{checkMeta.porcentajeComisionAhorro}}</p>
+    <p>Comision: $ <span id="values">{{checkMeta.comisionAhorroVista}}</span></p>
+
+</div>
+

@@ -104,7 +104,13 @@ class CrecimientoCooviahorro(models.Model):
     def __str__(self):
         return f"Comision $ {self.value} pagada por $ 1.000.000 de crecimiento en Cooviahorro a los directores de canal o sucursal"
 
-# class CrecimientoAhorroVista(models.Model):
-#     """"""
-#     description = models.CharField(max_length=500)
+class CrecimientoAhorroVista(models.Model):
+    """"""
+    description = models.CharField(max_length=500)
+    valueMin = models.CharField(max_length=500)
+    valueMax = models.CharField(max_length=500)
+    porcentaje = models.FloatField()
     
+    def __str__(self):
+        return f"Comision creciemiento Ahorro Vista del {self.porcentaje} por montos desde {self.valueMin} hasta {self.valueMax}"
+

@@ -555,14 +555,22 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
             {**d,
                 'promedio': str(d[f'Promedio {days} días']).split(".")[0] if '.' in str(d[f'Promedio {days} días']) else '0',
                 'total': str(d['Total']).split(".")[0] if '.' in str(d['Total']) else '0',
+                'cedula': str(d['CEDULA ASOCIADO']),
+                'cuenta': str(d['CUENTA ASOCIADO']),
             }
             for d in promedioAhorroVista]
-        # print(len(setPromedioAhorroVista))
-        # setPromedioAhorroVista = [d for d in setPromedioAhorroVista if d['PROMOTOR'] != "DEFAULT"]
-        # print(len(setPromedioAhorroVista))
+        if str(asesor.rol) == "Director Capt":
+            setPromedioAhorroVista = [data for data in setPromedioAhorroVista if data["PROMOTOR"] == "TARAZONA TARAZONA JOHANNA MARCELA" or data["PROMOTOR"] == "MORALES MUÑOZ GIOVANNY ALFONSO" or data["PROMOTOR"] == "CABANZO PINEDA IRMA ROCIO"]
         promedio = sum(int(value['promedio']) for value in setPromedioAhorroVista)
-        # print(promedio)
         
+        valuesCrecimientoAhorroVista = CrecimientoAhorroVista.objects.all()
+        porcentajeComisionAhorro = [data.porcentaje for data in valuesCrecimientoAhorroVista if promedio >= int(data.valueMin.replace(".", "")) and promedio <= int(data.valueMax.replace(".", ""))][0]
+
+        comisionAhorroVista = int(porcentajeComisionAhorro * (promedio / 100))
+        status["crecimientiAhorroVista"] = setPromedioAhorroVista
+        status["promedioAhorroVista"] = promedio
+        status["porcentajeComisionAhorro"] = porcentajeComisionAhorro
+        status["comisionAhorroVista"] = comisionAhorroVista
     if porcentaje < 80 and str(asesor.rol) != "Director Capt":
         status["state"] = False
         status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)."

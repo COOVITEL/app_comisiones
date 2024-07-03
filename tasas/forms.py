@@ -1,4 +1,4 @@
-from .models import Afiliaciones, Colocaciones, Cooviahorro, Cdat, CdatTasas, AhorroVista, CrecimientoBaseSocial, CrecimientoCDAT, CrecimientoCooviahorro
+from .models import *
 from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
@@ -131,3 +131,19 @@ class CrecimientoCooviahorroForm(forms.ModelForm):
         labels = {
             'description': 'Descripcion',
             }
+
+class CrecimientoAhorroVistaForm(forms.ModelForm):
+    """"""
+    valueMin = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMin')"}),
+                            label="Saldo promedio minimo")
+    valueMax = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMax')"}),
+                            label="Saldo promedio maximo")
+    
+    class Meta:
+        model = CrecimientoAhorroVista
+        fields = ['description', 'valueMin', 'valueMax', 'porcentaje']
+        labels = {
+            'description': 'Descripcion',
+            'procentaje': 'Porcentaje sobre el saldo promedio'
+        }
+        
