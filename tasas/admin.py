@@ -36,3 +36,7 @@ class CrecimientoCDATAdmin(admin.ModelAdmin):
 @admin.register(CrecimientoCooviahorro)
 class CrecimientoCooviahorroAdmin(admin.ModelAdmin):
     list_display = ['description', 'value']
+
+@admin.register(CrecimientoCartera)
+class CrecimientoCarteraAdmin(admin.ModelAdmin):
+    list_display = ['description', 'tasaMin', 'tasaMax', 'valueMin', 'valueMax', 'value']

@@ -1,0 +1,34 @@
+{% extends "control.html" %}
+
+{% load static %}
+
+{% block tasas %}
+    <h2>Tasas y comisiones de Crecimiento de Cartera</h2>
+    <table>
+        <tr>
+            <th>Descripcion</th>
+            <th>Tasa Minima</th>
+            <th>Tasa Maxima</th>
+            <th>Valor Minimo de Crecimiento</th>
+            <th>Valor Maximo de Crecimiento</th>
+            <th>Comision</th>
+        </tr>
+        {% for crecimiento in carteras %}
+            <tr>
+                <th>{{crecimiento.description}}</th>
+                <th>{{crecimiento.tasaMin}}</th>
+                <th>{{crecimiento.tasaMax}}</th>
+                <th>{{crecimiento.valueMin}}</th>
+                <th>{{crecimiento.valueMax}}</th>
+                <th>{{crecimiento.value}}</th>
+            </tr>
+        {% endfor %}
+    </table> 
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+
+{% endblock tasas %}

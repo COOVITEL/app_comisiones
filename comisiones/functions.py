@@ -571,6 +571,21 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
         status["promedioAhorroVista"] = promedio
         status["porcentajeComisionAhorro"] = porcentajeComisionAhorro
         status["comisionAhorroVista"] = comisionAhorroVista
+        
+        #Crecimiento Cartera
+        cartera = readExcel(name=str(asesor.sucursal),
+                            file="Cartera",
+                            asesor="SUC_PRODUCTO",
+                            columns=["CODIGO_INTERNO", "CALIFICACION", "SALDO_KAP", "TASA_EFECTIVA", "SUC_PRODUCTO"],
+                            archive=fileComisiones)
+        setCartera = [value for value in cartera if value["CALIFICACION"] == "A" or value["CALIFICACION"] == "B"]
+        sumaCartera = sum(int(value["SALDO_KAP"]) for value in setCartera)
+        tasaCarteraProm = sum(float(value["TASA_EFECTIVA"] / 12) for value in setCartera)
+        print(tasaCarteraProm)
+        tasaProm = tasaCarteraProm / len(setCartera)
+        print(tasaProm)
+        print(sumaCartera)
+        
     if porcentaje < 80 and str(asesor.rol) != "Director Capt":
         status["state"] = False
         status["message"] = f"Este mes no cumplio con el 80% de su meta mensual individual en Captaciones (Suma de CDAT, Cooviahorro y Ahorro Vista)."

@@ -114,3 +114,15 @@ class CrecimientoAhorroVista(models.Model):
     def __str__(self):
         return f"Comision creciemiento Ahorro Vista del {self.porcentaje} por montos desde {self.valueMin} hasta {self.valueMax}"
 
+class CrecimientoCartera(models.Model):
+    """"""
+    description = models.CharField(max_length=500)
+    tasaMin = models.FloatField()
+    tasaMax = models.FloatField()
+    valueMin = models.CharField(max_length=100)
+    valueMax = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f"Comision por millon de {self.value} por tasas promedio entre {self.tasaMin} - {self.tasaMax}"
+    

@@ -146,4 +146,22 @@ class CrecimientoAhorroVistaForm(forms.ModelForm):
             'description': 'Descripcion',
             'procentaje': 'Porcentaje sobre el saldo promedio'
         }
-        
+
+class CrecimientoCarteraForm(forms.ModelForm):
+    """"""
+    valueMin = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMin')"}),
+                            label="Valor minimo de Crecimiento")
+    valueMax = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_valueMax')"}),
+                            label="Valor maximo de Crecimiento")
+    value = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_value')"}),
+                            label="Valor de comision por millon ($1.000.000)")
+
+    class Meta:
+        model = CrecimientoCartera
+        fields = ["description", "tasaMin", "tasaMax", "valueMin", "valueMax", "value"]
+        labels = {
+            "description": "Descripcion",
+            "tasaMin": "Tasa minima promedio CDATs",
+            "tasaMax": "Tasa Maxima promedio CDATs",
+            "value": "Valor comision"
+        }

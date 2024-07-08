@@ -23,12 +23,12 @@
             {% if checkMeta.state %}
                 <p>{{checkMeta.porcentaje}}</p>
                 <p>{{checkMeta.message}}</p>
-                {% include "comisions/crecimientoBase.html" %}
+                {% comment %} {% include "comisions/crecimientoBase.html" %} {% endcomment %}
                 {% if checkMeta.stateCdat %}
-                    {% include "comisions/crecimientoCDAT.html" %}        
+                    {% comment %} {% include "comisions/crecimientoCDAT.html" %} {% endcomment %}
                 {% endif %}
-                {% include "comisions/crecimientoCoovi.html" %}
-                {% include "comisions/crecimientoAhorro.html" %}
+                {% comment %} {% include "comisions/crecimientoCoovi.html" %} {% endcomment %}
+                {% comment %} {% include "comisions/crecimientoAhorro.html" %} {% endcomment %}
             {% else %}
                 <p>{{checkMeta.porcentaje}}</p>
                 <p>{{checkMeta.message}}</p>

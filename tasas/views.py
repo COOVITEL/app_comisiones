@@ -144,3 +144,17 @@ def crecimientoAhorroVista(request):
         'form': form,
         'crecimientoAhorro': crecimientoAhorro
     })
+
+@login_required
+def crecimientoCartera(request):
+    cartera = CrecimientoCartera.objects.all()
+    form = CrecimientoCarteraForm()
+    if request.method == "POST":
+        form = CrecimientoCarteraForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("crecimientoCartera")
+    return render(request, "tasas/crecimientoCartera.html", {
+        "form": form,
+        "carteras": cartera
+    })
