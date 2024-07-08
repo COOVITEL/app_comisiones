@@ -116,3 +116,16 @@ class CountCrecimientoCooviahorro(models.Model):
     
     def __str__(self):
         return f"Numero de registros de crecimiento de cooviahorros para tener en cuenta, {self.value}"
+
+class CrecimientoCarteraMonth(models.Model):
+    """"""
+    name = models.ForeignKey(Sucursale, on_delete=models.CASCADE)
+    value = models.IntegerField()
+    year = models.IntegerField()
+    month = models.IntegerField()
+    
+    def __str__(self):
+        return f"Crecimiento de Cartera de {self.value} el {self.year}/{self.month}"
+    
+    class Meta:
+        ordering = ['-year', '-month']

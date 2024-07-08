@@ -1,0 +1,22 @@
+<div class="table">
+    <h4>Crecimiento Cartera</h4>    
+    <table>
+    <tr>
+        <th>Fecha</th>
+        {% for cartera in checkMeta.regisCartera %}
+        <th>{{cartera.month}} - {{cartera.year}}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>Monto Cooviahorros</td>
+        {% for cartera in checkMeta.regisCartera %}
+        <td>$ <span id="values">{{cartera.value}}</span></td>
+        {% endfor %}
+    </tr>
+    </table>
+    <p>Crecimiento Cartera: $ <span id="values">{{checkMeta.crecimientoCartera}}</span></p>
+    <p>Tasa Promedio: {{checkMeta.tasaCartera}}</p>
+    <p>Valor total de Comision: $ <span id="values">{{checkMeta.comisionCartera}}</span>
+
+</div>
+

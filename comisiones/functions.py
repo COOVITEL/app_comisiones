@@ -580,11 +580,45 @@ def checkMeta(name, fileCDAT, fileCoovi, fileAhorro, fileComisiones, date, fileA
                             archive=fileComisiones)
         setCartera = [value for value in cartera if value["CALIFICACION"] == "A" or value["CALIFICACION"] == "B"]
         sumaCartera = sum(int(value["SALDO_KAP"]) for value in setCartera)
+        
+        if not CrecimientoCarteraMonth.objects.filter(name=asesor.sucursal, year=date[1], month=date[0]).exists():
+            crecimientoCartera = CrecimientoCarteraMonth(name=asesor.sucursal,
+                                                value=sumaCartera,
+                                                year=date[1],
+                                                month=date[0])
+            crecimientoCartera.save()
+        
+        controlNumbers = CountCrecimientoCooviahorro.objects.all()[0].value
+        listCrecimientoCartera = CrecimientoCarteraMonth.objects.filter(name=asesor.sucursal)
+        listValuesCartera = [value.value for value in listCrecimientoCartera]
+        
+        posValue = listValuesCartera.index(sumaCartera)
+        if len(listValuesCartera) > 1:
+            setListValuesCartera = listValuesCartera[posValue + 1:]
+        else:
+            setListValuesCartera = listValuesCartera
+        if len(setListValuesCartera) >= controlNumbers:
+            setListValuesCartera = setListValuesCartera[:controlNumbers]
+
+        maxRegisCrecimientoCartera = max(setListValuesCartera)
+        
         tasaCarteraProm = sum(float(value["TASA_EFECTIVA"] / 12) for value in setCartera)
-        print(tasaCarteraProm)
-        tasaProm = tasaCarteraProm / len(setCartera)
-        print(tasaProm)
-        print(sumaCartera)
+        tasaProm = round(tasaCarteraProm / len(setCartera), 2)
+        
+        crecimientoCartera = sumaCartera - maxRegisCrecimientoCartera
+        if crecimientoCartera < 0:
+            crecimientoCartera = 0
+        comisionsCartera = CrecimientoCartera.objects.all()
+
+        valueComisionCartera = [value.value for value in comisionsCartera if
+                                (tasaProm >= value.tasaMin and tasaProm <= value.tasaMax) and
+                                (crecimientoCartera >= int(value.valueMin.replace(".", "")) and crecimientoCartera <= int(value.valueMax.replace(".", "")))]
+        valueCarteraComision = 0 if len(valueComisionCartera) == 0 else int(valueComisionCartera[0].replace(".", ""))
+        comisionCrecimientoCartera = int((crecimientoCartera / 1000000) * valueCarteraComision)
+        status["tasaCartera"] = tasaProm
+        status["crecimientoCartera"] = crecimientoCartera
+        status["regisCartera"] = listCrecimientoCartera
+        status["comisionCartera"] = comisionCrecimientoCartera
         
     if porcentaje < 80 and str(asesor.rol) != "Director Capt":
         status["state"] = False

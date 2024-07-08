@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Asesor, Sucursale, File, CooviahorroMonth, Court, Subzona
-from .models import CrecimientoCdatMonth,CountCrecimientoCDAT, CrecimientoCooviahorroMonth, CountCrecimientoCooviahorro
+from .models import *
 
 @admin.register(Asesor)
 class AsesorAdmin(admin.ModelAdmin):
@@ -41,3 +41,7 @@ class CrecimientoCooviahorroMonth(admin.ModelAdmin):
 @admin.register(CountCrecimientoCooviahorro)
 class CountCrecimientoCooviahorroAdmin(admin.ModelAdmin):
     list_display = ['value']
+
+@admin.register(CrecimientoCarteraMonth)
+class CrecimientoCarteraMonthAdmin(admin.ModelAdmin):
+    list_display = ['name', 'value', 'year', 'month']
