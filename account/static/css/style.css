@@ -253,10 +253,6 @@ transform: translateX(-50%);
     border-bottom: 2px solid var(--colorLinks);
 }
 
-.content {
-    height: 90%;
-}
-
 @media only screen and (max-width:1200px){
     .menu, .out {
         margin: 0px 5px;
@@ -286,4 +282,11 @@ transform: translateX(-50%);
         height: 40px;
         margin: 10px;
     }
+}
+
+.content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 }

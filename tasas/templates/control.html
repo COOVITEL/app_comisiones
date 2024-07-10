@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
-{% load static %}
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tasas.css' %}"/>
+{% endblock styles %}
 
 {% block content %}
-    <h2>Control de Tasas y Valores de Comisiones por producto</h2>
-
+    <h2 class="title-tasas">Control de Tasas y Comisiones</h2>
     
-    <ul>
+    <ul class="links-tasas">
         <li><a href="{% url "afiliaciones" %}">Afiliaciones</a></li>
         <li><a href="{% url "colocaciones" %}">Colocaciones</a></li>
         <li><a href="{% url "cooviahorro" %}">Cooviahorros</a></li>

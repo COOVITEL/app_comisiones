@@ -5,8 +5,6 @@ from roles.models import Roles
 class Afiliaciones(models.Model):
     """"""
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
-    rol = models.CharField(max_length=200)
     since = models.IntegerField()
     until = models.IntegerField()
     value = models.CharField(max_length=50)

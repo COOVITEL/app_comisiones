@@ -3,7 +3,7 @@ from .models import *
 
 @admin.register(Afiliaciones)
 class AfiliacionesAdmin(admin.ModelAdmin):
-    list_display = ['name', 'rol', 'since', 'until', 'value']
+    list_display = ['name', 'since', 'until', 'value']
     
 @admin.register(Colocaciones)
 class ColocacionesAdmin(admin.ModelAdmin):

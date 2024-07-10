@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
@@ -17,10 +17,31 @@ def afiliacionesView(request):
         if form.is_valid():
             form.save()
             return redirect('afiliaciones')
-    return render(request, 'tasas/afiliaciones.html', {
+    return render(request, 'tasas/afiliaciones/afiliaciones.html', {
         'form': form,
         'afiliaciones': afiliaciones
     })
+
+@login_required
+def updateAfiliaciones(request, id):
+    """"""
+    afiliacion = get_object_or_404(Afiliaciones, id=id)
+    if request.method == 'POST':
+        form = AfiliacionesForm(request.POST, instance=afiliacion)
+        if form.is_valid():
+            form.save()
+            redirect('afiliaciones')
+    else:
+        form = AfiliacionesForm(instance=afiliacion)
+    return render(request, 'tasas/afiliaciones/updateAfiliaciones.html', {'form': form})
+
+@login_required
+def deleteAfiliacion(request):
+    """"""
+    afiliacion = get_object_or_404(Afiliaciones, id=id)
+    afiliacion.delete()
+    return redirect('afiliaciones')
+
 
 @login_required
 def colocaciones(request):

@@ -5,6 +5,9 @@ from . import views
 urlpatterns = [
     path('', views.controlTasas, name='tasas'),
     path('afiliaciones/', views.afiliacionesView, name='afiliaciones'),
+    path('updateAfiliaciones/<int:id>/', views.updateAfiliaciones, name='updateafiliacion'),
+    path('deleteAfiliaciones/<int:id>/', views.deleteAfiliacion, name='deleteafiliacion'),
+    path('afiliaciones/', views.afiliacionesView, name='afiliaciones'),
     path('colocaciones/', views.colocaciones, name='colocaciones'),
     path('cooviahorros/', views.cooviahorro, name='cooviahorro'),
     path('cdats/', views.cdat, name='cdats'),

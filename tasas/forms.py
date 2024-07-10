@@ -3,16 +3,15 @@ from django import forms
 
 class AfiliacionesForm(forms.ModelForm):
     """"""
+    value = forms.CharField(widget=forms.TextInput(attrs={'oninput': "handleChange('id_value')"}),
+                        label="Valor de comision por cada afiliación")
     class Meta():
         model = Afiliaciones
-        fields = ['name', 'description', 'rol', 'since', 'until', 'value']
+        fields = ['name', 'since', 'until', 'value']
         labels = {
             'name': 'Nombre',
-            'description': 'Descripcion',
-            'rol': 'Rol',
-            'since': 'Desde',
-            'until': 'Hasta',
-            'value': 'Valor'
+            'since': 'Numero Minimo de afiliaciones',
+            'until': 'Numero Maximo de afiliaciones',
         }
 
 class ColocacionesForm(forms.ModelForm):
